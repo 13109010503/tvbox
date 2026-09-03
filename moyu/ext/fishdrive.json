@@ -1,0 +1,61 @@
+{
+  "embyClient": "Android Mobile",
+  "embyClientVersion": "3.3.67",
+  "pageSize": 20,
+  "subtitleExts": ["ass", "ssa", "srt"],
+  "embyItemTypes": "Movie,Series",
+  "embySearchTypes": "Movie,Series,BoxSet",
+  "embySearchLimit": 50,
+  "webdavFilters": [
+    {
+      "key": "type",
+      "name": "排序类型",
+      "values": [
+        {"n": "默认", "v": ""},
+        {"n": "名称", "v": "name"},
+        {"n": "大小", "v": "size"},
+        {"n": "修改时间", "v": "date"}
+      ]
+    },
+    {
+      "key": "order",
+      "name": "排序方式",
+      "values": [
+        {"n": "默认", "v": ""},
+        {"n": "升序", "v": "asc"},
+        {"n": "降序", "v": "desc"}
+      ]
+    }
+  ],
+  "embyFilters": [
+    {
+      "key": "sort",
+      "name": "排序",
+      "values": [
+        {"n": "最近更新", "v": "DateLastContentAdded,SortName"},
+        {"n": "最近添加", "v": "DateCreated,SortName"},
+        {"n": "名称升序", "v": "SortName|Ascending"},
+        {"n": "名称降序", "v": "SortName|Descending"},
+        {"n": "评分降序", "v": "CommunityRating,SortName"},
+        {"n": "年份降序", "v": "ProductionYear,SortName"}
+      ]
+    },
+    {
+      "key": "played",
+      "name": "状态",
+      "values": [
+        {"n": "全部", "v": ""},
+        {"n": "未看", "v": "false"},
+        {"n": "已看", "v": "true"}
+      ]
+    },
+    {
+      "key": "favorite",
+      "name": "收藏",
+      "values": [
+        {"n": "全部", "v": ""},
+        {"n": "已收藏", "v": "true"}
+      ]
+    }
+  ]
+}

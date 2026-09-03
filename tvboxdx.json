@@ -1,5 +1,5 @@
 {
-    "urls": [		
+    "urls": [
         {
             "url": "https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/fantaiying/fty.json",
             "name": "饭太硬"
@@ -13,19 +13,43 @@
             "name": "摸鱼"
         },
         {
-            "url": "https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/huban/hb.json",
-            "name": "虎斑"
-        }, 
-        {
             "url": "https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/wangerxiao/wex.json",
             "name": "王二小"
+        },
+        {
+            "url": "https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/pangmao/pm.json",
+            "name": "胖猫"
         },
         {
             "url": "https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/xiaosa/xs.json",
             "name": "潇洒"
         },
         {
-            "url":"https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/guodaxia/gdx.json",
+            "url": "https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/huban/hb.json",
+            "name": "虎斑"
+        },
+        {
+            "url": "https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/aowu/aw.json",
+            "name": "嗷呜"
+        },
+        {
+            "url": "https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/kulao/kl.json",
+            "name": "裤佬"
+        },
+        {
+            "url": "https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/laozhang/lz.json",
+            "name": "老张"
+        },
+        {
+            "url": "https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/vox/vox.json",
+            "name": "vox"
+        },
+        {
+            "url": "https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/huangju/hj.json",
+            "name": "黄聚"
+        },
+        {
+            "url": "https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/guodaxia/gdx.json",
             "name": "锅大侠"
         }
     ]

@@ -1,0 +1,1859 @@
+{
+    "version": "1.1",
+    "pan_share_guangya": "https://www.guangyapan.com/s/1928071386135629913_amOCaAN8klC1M0Us",
+    "pan_guangya_pwd": "",
+    "pan_share": "https://pan.quark.cn/s/29925e337e43",
+    "pan_pwd": "",
+    "pan_share_uc": "https://drive.uc.cn/s/5ab7387c7fdb4?public=1",
+    "pan_uc_pwd": "",
+    "settings": [
+        {
+            "id": "log_toggle",
+            "name": "日志开关",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_log.jpg?v=20260723c",
+            "remark": "",
+            "remark_from": "log_enabled"
+        },
+        {
+            "id": "log_path",
+            "name": "日志路径",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_log_path.jpg?v=20260723c",
+            "remark": "",
+            "remark_from": "log_path"
+        },
+        {
+            "id": "script_timeout",
+            "name": "脚本超时",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_timeout.jpg?v=20260723c",
+            "remark": "",
+            "remark_from": "script_timeout"
+        },
+        {
+            "id": "ai_model",
+            "name": "AI大模型",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_ai.jpg?v=20260723c",
+            "remark": "DeepSeek Flash",
+            "remark_from": "ai_model"
+        },
+        {
+            "id": "browser",
+            "name": "打开浏览器",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_browser.jpg?v=20260723c",
+            "remark": "内置浏览器"
+        },
+        {
+            "id": "open_mt",
+            "name": "打开 MT",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_open_mt.jpg?v=20260723c",
+            "remark": "VodPlus 目录"
+        },
+        {
+            "id": "pandora",
+            "name": "潘多拉",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_timeout.jpg?v=20260725p",
+            "remark": "安装 · 订阅 · 选线 · 代理"
+        }
+    ],
+    "groups": [
+        {
+            "id": "runtime",
+            "name": "运行环境",
+            "order": 1
+        },
+        {
+            "id": "tools",
+            "name": "工具插件",
+            "order": 2
+        },
+        {
+            "id": "network",
+            "name": "网络工具",
+            "order": 3
+        }
+    ],
+    "lists": [
+        {
+            "name": "php",
+            "group": "runtime",
+            "version": "7.3.22",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_php.jpg?v=20260723c",
+            "auto_install": true,
+            "available": true,
+            "show": true,
+            "info": "PHP 运行时 + 简易网站服务（HTML/CSS/JS/图片/.php 都能访问）。\n「打开本地页面」：选手机里的 .php / .html / .txt，起本机网页，可复制本机与局域网 URL，浏览器直接看。\n「我的页面」：收藏路径 + 备注名，一键再开。\n「启动网站」：选整个文件夹当根目录。\n打开方式：内置浏览器全屏，或系统浏览器。",
+            "binary_path": "bin/php",
+            "mkdir": [
+                "data",
+                "data/logs",
+                "data/www"
+            ],
+            "var_path": {
+                "LD_LIBRARY_PATH": "bin"
+            },
+            "commands": [
+                {
+                    "id": "self_test",
+                    "name": "✅ 自检（能否调用）",
+                    "description": "检测 php 二进制能否执行：版本 + 简单运算。通过后再启动网站。",
+                    "command": "echo \"==== PHP 自检 ====\"; echo \"which: $(command -v php 2>/dev/null || echo 未找到)\"; echo \"---- 版本 ----\"; php -v 2>&1; echo \"---- 运算 ----\"; php -r 'echo \"eval_ok=\".(1+1).\"\\n\"; echo \"json=\".(extension_loaded(\"json\")?\"yes\":\"no\").\"\\n\"; echo \"cwd=\".getcwd().\"\\n\";' 2>&1; EC=$?; echo \"---- 结果 ----\"; if [ \"$EC\" = \"0\" ]; then echo \"✅ PHP 可正常调用\"; else echo \"❌ PHP 调用失败 (exit=$EC)，请重装 php 包\"; fi",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "run_script",
+                    "name": "打开本地页面",
+                    "description": "选 .php / .html / .txt，以网页形式打开；可复制本机与局域网地址，不弹执行日志",
+                    "command": "mkdir -p \"{dataPath}/logs\" \"{dataPath}/www\"; LOGF=\"{dataPath}/logs/php_boot.log\"; PIDF=\"{dataPath}/logs/php.pid\"; echo \"[boot] $(date) open_page\" > \"$LOGF\"; echo \"[progress] 10 写入启动日志…\" >> \"$LOGF\"; echo \"[progress] 25 解析页面路径…\" >> \"$LOGF\"; HTML=\"{html_file}\"; PORT=\"{port}\"; DOC=$(dirname \"$HTML\"); NAME=$(basename \"$HTML\"); ENC=$(php -r 'echo rawurlencode($argv[1]);' \"$NAME\" 2>>\"$LOGF\"); [ -z \"$ENC\" ] && ENC=\"$NAME\"; echo \"[boot] HTML=$HTML\" >> \"$LOGF\"; echo \"[boot] DOC=$DOC PORT=$PORT\" >> \"$LOGF\"; echo \"[progress] 45 清理旧 PHP 进程…\" >> \"$LOGF\"; if [ -f \"$PIDF\" ]; then kill \"$(cat \"$PIDF\")\" 2>/dev/null; rm -f \"$PIDF\"; fi; for p in $(ps -A -o PID= -o NAME= 2>/dev/null | awk '$2==\"php\"{print $1}'); do kill \"$p\" 2>/dev/null; done; sleep 1; echo \"[progress] 70 写入端口与页面地址…\" >> \"$LOGF\"; echo \"$PORT\" > \"{dataPath}/logs/php.port\"; printf '%s\\n' \"$DOC\" > \"{dataPath}/logs/php.docroot\"; printf 'http://127.0.0.1:%s/%s\\n' \"$PORT\" \"$ENC\" > \"{dataPath}/logs/local_page.txt\"; printf 'http://127.0.0.1:%s/\\n' \"$PORT\" > \"{dataPath}/logs/local_site.txt\"; IP=\"{lanIp}\"; if [ -n \"$IP\" ]; then printf 'http://%s:%s/%s\\n' \"$IP\" \"$PORT\" \"$ENC\" > \"{dataPath}/logs/lan_page.txt\"; printf 'http://%s:%s/\\n' \"$IP\" \"$PORT\" > \"{dataPath}/logs/lan_site.txt\"; else rm -f \"{dataPath}/logs/lan_page.txt\"; fi; echo $$ > \"$PIDF\"; echo \"[progress] 90 正在拉起 php -S（等待端口就绪）…\" >> \"$LOGF\"; echo \"[boot] launching php -S on $PORT\" >> \"$LOGF\"; exec php -S 0.0.0.0:$PORT -t \"$DOC\" >> \"$LOGF\" 2>&1",
+                    "auto_execute": false,
+                    "background": true,
+                    "show_output": false,
+                    "variables": [
+                        {
+                            "key": "script_path",
+                            "name": "页面文件",
+                            "type": "file",
+                            "filter": "*.php,*.html,*.htm,*.txt",
+                            "default": "/storage/emulated/0/",
+                            "hint": "可选 .php / .html / .txt",
+                            "required": true
+                        },
+                        {
+                            "key": "port",
+                            "name": "端口",
+                            "type": "number",
+                            "default": "8080",
+                            "hint": "本机与局域网访问端口",
+                            "required": true,
+                            "min": 1024,
+                            "max": 65535
+                        }
+                    ],
+                    "clicks": [
+                        {
+                            "title": "内置浏览器打开（全屏）",
+                            "action": "webview_full_file",
+                            "value": "{dataPath}/logs/local_page.txt"
+                        },
+                        {
+                            "title": "系统浏览器打开",
+                            "action": "open_file",
+                            "value": "{dataPath}/logs/local_page.txt"
+                        },
+                        {
+                            "title": "复制本机地址",
+                            "action": "copy_file",
+                            "value": "{dataPath}/logs/local_page.txt"
+                        },
+                        {
+                            "title": "复制局域网地址",
+                            "action": "copy_file",
+                            "value": "{dataPath}/logs/lan_page.txt"
+                        },
+                        {
+                            "title": "系统浏览器打开局域网",
+                            "action": "open_file",
+                            "value": "{dataPath}/logs/lan_page.txt"
+                        }
+                    ]
+                },
+                {
+                    "id": "php_scripts",
+                    "name": "我的页面",
+                    "description": "收藏 .php/.html/.txt 并备注名字，一键打开网页",
+                    "command": "true",
+                    "auto_execute": false,
+                    "background": false,
+                    "show_output": false,
+                    "variables": []
+                },
+                {
+                    "id": "php_start",
+                    "name": "启动网站",
+                    "description": "选文件夹当网站根目录；默认 App 私有 data/www。HTML/CSS/JS/图片/.php 均可访问",
+                    "command": "mkdir -p \"{dataPath}/logs\"; LOGF=\"{dataPath}/logs/php_boot.log\"; PIDF=\"{dataPath}/logs/php.pid\"; echo \"[boot] $(date) start\" > \"$LOGF\"; echo \"[progress] 10 写入启动日志…\" >> \"$LOGF\"; echo \"[progress] 25 检查网站根目录…\" >> \"$LOGF\"; DOC=\"{doc_root}\"; PORT=\"{port}\"; mkdir -p \"$DOC\" 2>>\"$LOGF\"; if [ ! -d \"$DOC\" ]; then echo \"[fail] 目录不可用: $DOC\" >> \"$LOGF\"; cat \"$LOGF\"; exit 1; fi; if [ ! -f \"$DOC/index.php\" ] && [ ! -f \"$DOC/index.html\" ] && [ ! -f \"$DOC/index.htm\" ]; then printf '%s\\n' '<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>OK</title></head><body><h1>网站已启动</h1><p>把 html/css/js/php 放到此目录即可访问。</p></body></html>' > \"$DOC/index.html\"; fi; echo \"[progress] 45 清理旧 PHP 进程…\" >> \"$LOGF\"; if [ -f \"$PIDF\" ]; then kill \"$(cat \"$PIDF\")\" 2>/dev/null; rm -f \"$PIDF\"; fi; for p in $(ps -A -o PID= -o NAME= 2>/dev/null | awk '$2==\"php\"{print $1}'); do kill \"$p\" 2>/dev/null; done; sleep 1; echo \"[boot] DOC=$DOC PORT=$PORT\" >> \"$LOGF\"; echo \"[progress] 70 写入端口与网站根…\" >> \"$LOGF\"; echo \"$PORT\" > \"{dataPath}/logs/php.port\"; printf '%s\\n' \"$DOC\" > \"{dataPath}/logs/php.docroot\"; printf 'http://127.0.0.1:%s/\\n' \"$PORT\" > \"{dataPath}/logs/local_site.txt\"; echo $$ > \"$PIDF\"; echo \"[progress] 90 正在拉起 php -S（等待端口就绪）…\" >> \"$LOGF\"; echo \"[boot] launching php -S on $PORT\" >> \"$LOGF\"; exec php -S 0.0.0.0:$PORT -t \"$DOC\" >> \"$LOGF\" 2>&1",
+                    "auto_execute": false,
+                    "background": true,
+                    "show_output": false,
+                    "variables": [
+                        {
+                            "key": "doc_root",
+                            "name": "网站根目录",
+                            "type": "directory",
+                            "default": "{dataPath}/www",
+                            "hint": "默认 App 私有 www；也可选外置有权限目录",
+                            "required": true
+                        },
+                        {
+                            "key": "port",
+                            "name": "端口",
+                            "type": "number",
+                            "default": "8080",
+                            "hint": "本机与局域网访问端口",
+                            "required": true,
+                            "min": 1024,
+                            "max": 65535
+                        }
+                    ],
+                    "clicks": [
+                        {
+                            "title": "打开本机网站（全屏）",
+                            "action": "webview_full",
+                            "value": "http://127.0.0.1:{port}/"
+                        },
+                        {
+                            "title": "系统浏览器打开",
+                            "action": "open",
+                            "value": "http://127.0.0.1:{port}/"
+                        },
+                        {
+                            "title": "复制本机地址",
+                            "action": "copy",
+                            "value": "http://127.0.0.1:{port}/"
+                        }
+                    ]
+                },
+                {
+                    "id": "php_lan",
+                    "name": "查看局域网地址",
+                    "description": "用本机 WiFi IP 生成局域网网站链接（端口沿用「启动网站」时填的）",
+                    "command": "mkdir -p \"{dataPath}/logs\"; PORT=8080; if [ -f \"{dataPath}/logs/php.port\" ]; then PORT=$(cat \"{dataPath}/logs/php.port\" 2>/dev/null | tr -d ' \\n\\r'); fi; [ -z \"$PORT\" ] && PORT=8080; IP=\"{lanIp}\"; DOC=\"\"; if [ -f \"{dataPath}/logs/php.docroot\" ]; then DOC=$(cat \"{dataPath}/logs/php.docroot\" 2>/dev/null | tr -d '\\n\\r'); fi; echo \"==== PHP 网站局域网访问 ====\"; echo \"端口: $PORT\"; [ -n \"$DOC\" ] && echo \"网站根: $DOC\"; PIDF=\"{dataPath}/logs/php.pid\"; if [ -f \"$PIDF\" ] && kill -0 \"$(cat \"$PIDF\")\" 2>/dev/null; then echo \"进程: 运行中 (pid=$(cat \"$PIDF\"))\"; else echo \"进程: 未检测到（请先点「启动网站」）\"; fi; echo \"本机: http://127.0.0.1:$PORT/\"; printf 'http://127.0.0.1:%s/\\n' \"$PORT\" > \"{dataPath}/logs/local_site.txt\"; if [ -n \"$IP\" ]; then echo \"本机局域网 IP: $IP\"; echo \"局域网: http://$IP:$PORT/\"; printf 'http://%s:%s/\\n' \"$IP\" \"$PORT\" > \"{dataPath}/logs/lan_site.txt\"; echo; echo \"同一 WiFi 下用手机/电脑浏览器打开上方局域网地址\"; else echo \"未探测到局域网 IP（请确认手机已连 WiFi）\"; rm -f \"{dataPath}/logs/lan_site.txt\"; fi",
+                    "auto_execute": false,
+                    "show_output": true,
+                    "clicks": [
+                        {
+                            "title": "复制局域网地址",
+                            "action": "copy_file",
+                            "value": "{dataPath}/logs/lan_site.txt"
+                        },
+                        {
+                            "title": "系统浏览器打开局域网",
+                            "action": "open_file",
+                            "value": "{dataPath}/logs/lan_site.txt"
+                        },
+                        {
+                            "title": "打开本机网站（全屏）",
+                            "action": "webview_full_file",
+                            "value": "{dataPath}/logs/local_site.txt"
+                        }
+                    ]
+                },
+                {
+                    "id": "php_log",
+                    "name": "查看启动日志",
+                    "description": "显示 data/logs/php_boot.log，用于排查起不来",
+                    "command": "echo \"==== php_boot.log ====\"; tail -n 120 \"{dataPath}/logs/php_boot.log\" 2>/dev/null || echo \"(尚无日志，请先点启动网站)\"; echo; echo \"==== 状态 ====\"; PIDF=\"{dataPath}/logs/php.pid\"; if [ -f \"$PIDF\" ] && kill -0 \"$(cat \"$PIDF\")\" 2>/dev/null; then echo \"进程运行中 pid=$(cat \"$PIDF\")\"; else echo \"进程未运行\"; fi; [ -f \"{dataPath}/logs/php.port\" ] && echo \"端口: $(cat \"{dataPath}/logs/php.port\")\"; [ -f \"{dataPath}/logs/php.docroot\" ] && echo \"网站根: $(cat \"{dataPath}/logs/php.docroot\")\"",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "php_stop",
+                    "name": "停止网站",
+                    "description": "结束 PHP 内置服务器进程",
+                    "command": "PIDF=\"{dataPath}/logs/php.pid\"; if [ -f \"$PIDF\" ]; then kill \"$(cat \"$PIDF\")\" 2>/dev/null; rm -f \"$PIDF\"; fi; for p in $(ps -A -o PID= -o NAME= 2>/dev/null | awk '$2==\"php\"{print $1}'); do kill \"$p\" 2>/dev/null; done; echo stopped",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "php_version",
+                    "name": "查看 PHP 版本",
+                    "description": "确认 PHP 运行时已安装可用",
+                    "command": "php -v",
+                    "auto_execute": false,
+                    "show_output": true
+                }
+            ],
+            "downloads": [
+                {
+                    "arch": "arm64-v8a",
+                    "url": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/php-arm64.zip",
+                    "size": "15.2 MB",
+                    "mirrors": {
+                        "github": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/php-arm64.zip",
+                        "gitlab": "https://gitlab.com/ccfork/binary/-/raw/3ec029a37bc2b9515d245b2500a32867434f7e3a/files/php_armv8a.zip"
+                    },
+                    "pan": {
+                        "match": "php-arm64.zip"
+                    }
+                },
+                {
+                    "arch": "armeabi-v7a",
+                    "url": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/php-arm32.zip",
+                    "size": "14.8 MB",
+                    "mirrors": {
+                        "github": "https://github.com/example/php/releases/download/php-android-armeabi-v7a.tar.gz",
+                        "gitlab": "https://gitlab.example.com/php/php-android-armeabi-v7a.tar.gz"
+                    },
+                    "pan": {
+                        "match": "php-arm32.zip"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "termux",
+            "group": "runtime",
+            "title": "termux",
+            "version": "1.0.0",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_termux.jpg?v=20260806b",
+            "auto_install": false,
+            "available": true,
+            "show": true,
+            "info": "无 Root 沙箱命令行（对齐 Termux / MT 终端思路，不走 proot）。\n「终端」自己输入；「AI对话」说人话让 AI 帮你跑命令（设置→AI大模型）。\n「打开目录」用 MT 打开 termux 安装根目录（bin/lib）。\n不是完整 Ubuntu：不能 apt；要发行版请用列表末尾的 ubuntu（完整 proot）。\n网盘放 termux_arm64.zip（或 termux-tools_arm64.zip）。",
+            "binary_path": "bin/bash",
+            "mkdir": [
+                "data",
+                "data/tmp",
+                "data/logs"
+            ],
+            "var_path": {
+                "PATH": "bin",
+                "LD_LIBRARY_PATH": "lib",
+                "PREFIX": ".",
+                "HOME": "data",
+                "TMPDIR": "data/tmp",
+                "SSL_CERT_FILE": "etc/ssl/cert.pem",
+                "CURL_CA_BUNDLE": "etc/ssl/cert.pem",
+                "OPENSSL_CONF": "etc/ssl/openssl.cnf",
+                "TERM": "xterm-256color"
+            },
+            "commands": [
+                {
+                    "id": "termux_terminal",
+                    "name": "💻 终端",
+                    "description": "黑底终端：输入命令回车执行，底栏快捷键；无需 Root",
+                    "command": "true",
+                    "auto_execute": false,
+                    "show_output": false
+                },
+                {
+                    "id": "termux_ai_chat",
+                    "name": "🤖 AI对话",
+                    "description": "用人话说需求，AI 帮你写并执行命令（模型同设置→AI大模型）",
+                    "command": "true",
+                    "auto_execute": false,
+                    "show_output": false
+                },
+                {
+                    "id": "self_test",
+                    "name": "✅ 自检",
+                    "description": "检测 bash / curl / ssh 能否无 Root 执行",
+                    "command": "true",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "open_pkg_dir",
+                    "name": "打开目录",
+                    "description": "用 MT 打开 termux 根目录（lab/termux，含 bin/lib）",
+                    "command": "true",
+                    "auto_execute": false,
+                    "show_output": false
+                }
+            ],
+            "downloads": [
+                {
+                    "arch": "arm64-v8a",
+                    "url": "http://127.0.0.1:{serverPort}/file/VodPlus/EnvFiles/termux_arm64.zip",
+                    "size": "约 12 MB",
+                    "pan": {
+                        "match": "termux*_arm64.zip"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "nodejs",
+            "group": "runtime",
+            "cmd_name": "node",
+            "version": "25.2.1",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_nodejs.jpg?v=20260723c",
+            "auto_install": true,
+            "available": true,
+            "show": true,
+            "info": "Node.js 运行时（基础版）。\n安装后供 lxserver、drpy-node、danmu-api 等组件依赖。\n支持选本地 .js 运行并看日志、收藏备注一键跑。\n网盘需同时放齐两个包：nodejs_arm64.zip + nodejs_lib_arm64.zip（缺扩展库会安装失败并提示）。\n装完请点「自检」确认 node -v 正常。",
+            "binary_path": "bin/node",
+            "var_path": {
+                "LD_LIBRARY_PATH": "lib",
+                "OPENSSL_CONF": "/dev/null",
+                "NODE_PATH": "lib/node_modules"
+            },
+            "commands": [
+                {
+                    "id": "self_test",
+                    "name": "✅ 自检（能否调用）",
+                    "description": "检测 node 二进制能否执行：版本 + 简单运算。通过后再装/启 lxserver。",
+                    "command": "echo \"==== Node 自检 ====\"; echo \"which: $(command -v node 2>/dev/null || echo 未找到)\"; echo \"---- 版本 ----\"; node -v 2>&1; echo \"---- 运算 ----\"; node -e 'console.log(\"eval_ok=\"+(1+1)); console.log(\"platform=\"+process.platform); console.log(\"arch=\"+process.arch);' 2>&1; EC=$?; echo \"---- 结果 ----\"; if [ \"$EC\" = \"0\" ]; then echo \"✅ Node.js 可正常调用\"; else echo \"❌ Node 调用失败 (exit=$EC)，请重装 nodejs 包\"; fi",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "run_script",
+                    "name": "运行本地脚本",
+                    "description": "选择本地 .js 前台运行，结束后弹出全部日志",
+                    "command": "node \"{script_path}\"",
+                    "auto_execute": false,
+                    "background": false,
+                    "show_output": true,
+                    "variables": [
+                        {
+                            "key": "script_path",
+                            "name": "脚本路径",
+                            "type": "file",
+                            "filter": "*.js",
+                            "default": "/storage/emulated/0/",
+                            "hint": "只列出 .js 文件",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "id": "js_scripts",
+                    "name": "我的脚本",
+                    "description": "收藏路径并备注名字，一键再跑",
+                    "command": "true",
+                    "auto_execute": false,
+                    "background": false,
+                    "show_output": false,
+                    "variables": []
+                },
+                {
+                    "id": "node_version",
+                    "name": "查看 Node 版本",
+                    "description": "确认 Node.js 运行时已安装可用（如洛雪 lxserver 依赖，无额外实验室功能）",
+                    "command": "node -v",
+                    "auto_execute": false,
+                    "show_output": true
+                }
+            ],
+            "downloads": [
+                {
+                    "arch": "arm64-v8a",
+                    "url": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/nodejs_arm64.zip",
+                    "liburl": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/nodejs_lib_arm64.zip",
+                    "size": "293.33 MB",
+                    "mirrors": {
+                        "github": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/nodejs_arm64.zip",
+                        "gitlab": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/nodejs_arm64.zip"
+                    },
+                    "pan": {
+                        "match": "nodejs_arm64.zip",
+                        "lib_match": "nodejs_lib_arm64.zip"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "python",
+            "group": "runtime",
+            "version": "3.13",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_python.jpg?v=20260723c",
+            "auto_install": true,
+            "available": true,
+            "show": true,
+            "info": "Python 3.13 静态提取版（Android ARM64）。\n能力：自检、版本、pip、选本地 .py 运行并看日志、收藏备注一键跑、后台脚本、HTTP 文件服务、执行代码片段。\n跑批量下载类脚本时，建议设置→脚本超时调到 120 秒以上。",
+            "binary_path": "bin/python3",
+            "var_path": {
+                "PATH": "bin",
+                "LD_LIBRARY_PATH": "lib",
+                "PYTHONHOME": ".",
+                "PYTHONPATH": "lib/python3/site-packages"
+            },
+            "commands": [
+                {
+                    "id": "self_test",
+                    "name": "✅ 自检（能否调用）",
+                    "description": "检测 python3 能否执行：版本 + 简单运算。通过后再跑脚本/HTTP 服务。",
+                    "command": "echo \"==== Python 自检 ====\"; echo \"which: $(command -v python3 2>/dev/null || echo 未找到)\"; echo \"---- 版本 ----\"; python3 -V 2>&1; echo \"---- 运算 ----\"; python3 -c 'import sys; print(\"eval_ok=\"+str(1+1)); print(\"executable=\"+sys.executable); print(\"version=\"+sys.version.split()[0])' 2>&1; EC=$?; echo \"---- 结果 ----\"; if [ \"$EC\" = \"0\" ]; then echo \"✅ Python 可正常调用\"; else echo \"❌ Python 调用失败 (exit=$EC)，请重装 python 包\"; fi",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "run_script",
+                    "name": "运行本地脚本",
+                    "description": "选择本地 .py 前台运行，结束后弹出全部日志",
+                    "command": "python3 \"{script_path}\"",
+                    "auto_execute": false,
+                    "background": false,
+                    "show_output": true,
+                    "variables": [
+                        {
+                            "key": "script_path",
+                            "name": "脚本路径",
+                            "type": "file",
+                            "filter": "*.py",
+                            "default": "/storage/emulated/0/",
+                            "hint": "只列出 .py 文件",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "id": "py_scripts",
+                    "name": "我的脚本",
+                    "description": "收藏路径并备注名字，一键再跑",
+                    "command": "true",
+                    "auto_execute": false,
+                    "background": false,
+                    "show_output": false,
+                    "variables": []
+                },
+                {
+                    "auto_execute": false,
+                    "background": false,
+                    "clicks": [],
+                    "command": "python3 --version",
+                    "description": "显示 Python 版本信息",
+                    "id": "version",
+                    "name": "查看版本",
+                    "show_output": true,
+                    "variables": []
+                },
+                {
+                    "auto_execute": false,
+                    "background": false,
+                    "clicks": [],
+                    "command": "python3 -m pip list",
+                    "description": "列出已安装的第三方包",
+                    "id": "pip_list",
+                    "name": "已安装包",
+                    "show_output": true,
+                    "variables": []
+                },
+                {
+                    "auto_execute": false,
+                    "background": false,
+                    "clicks": [],
+                    "command": "python3 -m pip install {package}",
+                    "description": "通过 pip 安装指定的 Python 包",
+                    "id": "pip_install",
+                    "name": "安装包",
+                    "show_output": true,
+                    "variables": [
+                        {
+                            "default": "requests",
+                            "hint": "输入要安装的包名，如 requests、httpx",
+                            "key": "package",
+                            "name": "包名",
+                            "required": true,
+                            "type": "text"
+                        }
+                    ]
+                },
+                {
+                    "auto_execute": false,
+                    "background": false,
+                    "clicks": [],
+                    "command": "python3 -m pip uninstall {package} -y",
+                    "description": "通过 pip 卸载指定的 Python 包",
+                    "id": "pip_uninstall",
+                    "name": "卸载包",
+                    "show_output": true,
+                    "variables": [
+                        {
+                            "default": "",
+                            "hint": "输入要卸载的包名",
+                            "key": "package",
+                            "name": "包名",
+                            "required": true,
+                            "type": "text"
+                        }
+                    ]
+                },
+                {
+                    "auto_execute": false,
+                    "background": false,
+                    "clicks": [],
+                    "command": "python3 -m pip install --upgrade {package}",
+                    "description": "升级指定的 Python 包到最新版本",
+                    "id": "pip_upgrade",
+                    "name": "升级包",
+                    "show_output": true,
+                    "variables": [
+                        {
+                            "default": "pip",
+                            "hint": "输入要升级的包名，留空可升级 pip 本身",
+                            "key": "package",
+                            "name": "包名",
+                            "required": true,
+                            "type": "text"
+                        }
+                    ]
+                },
+                {
+                    "auto_execute": false,
+                    "background": true,
+                    "clicks": [],
+                    "command": "python3 \"{script_path}\"",
+                    "description": "在后台执行指定的 Python 脚本（适合长期运行的服务）",
+                    "id": "run_script_bg",
+                    "name": "后台运行脚本",
+                    "show_output": false,
+                    "variables": [
+                        {
+                            "default": "/storage/emulated/0/",
+                            "filter": "*.py",
+                            "hint": "选择要后台执行的 .py 文件",
+                            "key": "script_path",
+                            "name": "脚本路径",
+                            "required": true,
+                            "type": "file"
+                        }
+                    ]
+                },
+                {
+                    "auto_execute": false,
+                    "background": true,
+                    "clicks": [],
+                    "command": "python3 -m http.server {port} --directory {root_dir}",
+                    "description": "在指定目录启动一个简单的 HTTP 文件服务器",
+                    "id": "http_server",
+                    "name": "HTTP 文件服务",
+                    "show_output": true,
+                    "variables": [
+                        {
+                            "default": "8080",
+                            "hint": "HTTP 服务监听端口",
+                            "key": "port",
+                            "max": 65535,
+                            "min": 1024,
+                            "name": "端口号",
+                            "required": true,
+                            "type": "number"
+                        },
+                        {
+                            "default": "/storage/emulated/0/",
+                            "hint": "对外提供访问的目录",
+                            "key": "root_dir",
+                            "name": "服务目录",
+                            "required": true,
+                            "type": "directory"
+                        }
+                    ]
+                },
+                {
+                    "auto_execute": false,
+                    "background": false,
+                    "clicks": [],
+                    "command": "python3 -c \"{code}\"",
+                    "description": "直接输入并执行一段 Python 代码",
+                    "id": "run_code",
+                    "name": "执行代码片段",
+                    "show_output": true,
+                    "variables": [
+                        {
+                            "default": "import sys; print(sys.version)",
+                            "hint": "输入要执行的 Python 代码",
+                            "key": "code",
+                            "name": "代码",
+                            "required": true,
+                            "type": "text_multiline"
+                        }
+                    ]
+                }
+            ],
+            "downloads": [
+                {
+                    "arch": "arm64-v8a",
+                    "size": "～15 MB",
+                    "url": "https://mpimg.cn/down.php/2f0d62342feb91293328c685bbbb4801.zip",
+                    "mirrors": {
+                        "直链": "https://mpimg.cn/down.php/2f0d62342feb91293328c685bbbb4801.zip"
+                    }
+                }
+            ],
+            "imported": false,
+            "settings": []
+        },
+        {
+            "name": "lxserver",
+            "group": "tools",
+            "version": "1.9.4",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_lxserver.jpg?v=20260723c",
+            "auto_install": false,
+            "available": true,
+            "show": true,
+            "info": "洛雪 LX Sync Server 本机版（网页播放器）。\n依赖：先安装 nodejs 运行时（未装会在启动时明确提示）。\n安装后点「启动洛雪」，等约 3～5 秒再「打开播放器」。\n本机：http://127.0.0.1:9527/music\n局域网：同一 WiFi 下用「查看局域网地址」得到 http://局域网IP:9527/music\n网页管理登录：只需密码 123456（管理页没有用户名框）\n同步用户名 admin / 密码 123456（给洛雪客户端同步用，不是网页登录账号）\n若打不开：点「查看启动日志」。\n注意：不自带音源，需在网页后台自行导入自定义源。",
+            "var_path": {
+                "PATH": "../nodejs/bin",
+                "LD_LIBRARY_PATH": "../nodejs/lib",
+                "OPENSSL_CONF": "/dev/null",
+                "NODE_PATH": "../nodejs/lib/node_modules"
+            },
+            "mkdir": [
+                "data",
+                "cache",
+                "music",
+                "logs"
+            ],
+            "commands": [
+                {
+                    "id": "lx_start",
+                    "name": "启动洛雪",
+                    "description": "后台启动；绑定 0.0.0.0 供本机+局域网访问；日志 data/logs/boot.log",
+                    "command": "mkdir -p \"{dataPath}/logs\"; cd \"{envRootPath}\" || exit 1; NODE=\"\"; NODE=$(command -v node 2>/dev/null); if [ -z \"$NODE\" ] || [ ! -f \"$NODE\" ]; then for c in \"{envRootPath}/../nodejs/bin/node\" \"{envRootPath}/../nodejs/node\"; do if [ -f \"$c\" ]; then NODE=\"$c\"; break; fi; done; fi; if [ -z \"$NODE\" ] || [ ! -f \"$NODE\" ]; then mkdir -p \"{dataPath}/logs\" \"/storage/emulated/0/VodPlus/EnvFiles/config\"; DIAG=\"/storage/emulated/0/VodPlus/EnvFiles/config/node_missing_diag.txt\"; { echo \"[fail] 未找到 node 可执行文件（lab/nodejs/bin/node）\"; echo \"请强制重装「nodejs」后再启动。\"; echo \"envRoot={envRootPath}\"; echo \"PATH=$PATH\"; echo \"==== ls ../nodejs ====\"; ls -la \"{envRootPath}/../nodejs\" 2>&1; echo \"==== ls ../nodejs/bin ====\"; ls -la \"{envRootPath}/../nodejs/bin\" 2>&1; echo \"==== command -v node ====\"; command -v node 2>&1; } > \"{dataPath}/logs/boot.log\"; cp \"{dataPath}/logs/boot.log\" \"$DIAG\" 2>/dev/null; exit 1; fi; PIDF=\"{dataPath}/logs/lx.pid\"; if [ -f \"$PIDF\" ]; then kill \"$(cat \"$PIDF\")\" 2>/dev/null; rm -f \"$PIDF\"; fi; for p in $(ps -A -o PID= -o ARGS= 2>/dev/null | awk '/\\/node/ && /lxserver\\/bin\\/start\\.js/ {print $1}'); do kill \"$p\" 2>/dev/null; done; sleep 1; echo \"[boot] $(date)\" > \"{dataPath}/logs/boot.log\"; echo \"[progress] 10 写入启动日志…\" >> \"{dataPath}/logs/boot.log\"; echo \"[boot] NODE=$NODE BIND=0.0.0.0 PORT={port} cwd=$(pwd)\" >> \"{dataPath}/logs/boot.log\"; \"$NODE\" -v >> \"{dataPath}/logs/boot.log\" 2>&1; echo \"[progress] 40 Node 已就绪…\" >> \"{dataPath}/logs/boot.log\"; export LD_LIBRARY_PATH=\"{envRootPath}/../nodejs/lib:${LD_LIBRARY_PATH}\"; CATVOD_ANDROID=1 NODE_ENV=production PORT={port} BIND_IP=0.0.0.0 DATA_PATH=\"{dataPath}\" LOG_PATH=\"{dataPath}/logs\" nohup \"$NODE\" \"./bin/start.js\" >> \"{dataPath}/logs/boot.log\" 2>&1 & echo $! > \"$PIDF\"; echo \"{port}\" > \"{dataPath}/logs/lx.port\"; printf 'http://127.0.0.1:%s/music/\\n' \"{port}\" > \"{dataPath}/logs/local_player.txt\"; echo \"[boot] started pid=$(cat \"$PIDF\") port={port}\" >> \"{dataPath}/logs/boot.log\"; sleep 2; if kill -0 \"$(cat \"$PIDF\")\" 2>/dev/null; then echo \"[boot] ok\" >> \"{dataPath}/logs/boot.log\"; else echo \"[boot] process exited\" >> \"{dataPath}/logs/boot.log\"; exit 1; fi",
+                    "auto_execute": false,
+                    "background": true,
+                    "show_output": false,
+                    "variables": [
+                        {
+                            "key": "port",
+                            "name": "端口",
+                            "type": "number",
+                            "default": "9527",
+                            "hint": "可改；一般直接点执行用默认 9527",
+                            "required": true,
+                            "min": 1024,
+                            "max": 65535
+                        }
+                    ],
+                    "clicks": [
+                        {
+                            "title": "打开播放器（全屏）",
+                            "action": "webview_full",
+                            "value": "http://127.0.0.1:{port}/music/"
+                        },
+                        {
+                            "title": "系统浏览器打开",
+                            "action": "open",
+                            "value": "http://127.0.0.1:{port}/music/"
+                        },
+                        {
+                            "title": "打开管理后台",
+                            "action": "webview",
+                            "style": "dialog",
+                            "value": "http://127.0.0.1:{port}/"
+                        },
+                        {
+                            "title": "复制本机播放器地址",
+                            "action": "copy",
+                            "value": "http://127.0.0.1:{port}/music"
+                        },
+                        {
+                            "title": "使用说明",
+                            "action": "alert",
+                            "value": "1. 先装 nodejs，再装 lxserver\n2. 点「启动洛雪」后等 3～5 秒\n3. 点「打开播放器」会走内置浏览器（全屏）\n4. 顶栏：前后进/地址/刷新/关闭；底栏：推送/全屏/沉浸/更多\n5. 网页管理只需密码 123456（无用户名）；admin 是同步用户不是网页账号\n6. 播歌需在网页里导入自定义音源"
+                        }
+                    ]
+                },
+                {
+                    "id": "lx_lan",
+                    "name": "查看局域网地址",
+                    "description": "用本机 WiFi IP 生成局域网播放器链接（端口沿用「启动洛雪」时填的，默认 9527）",
+                    "command": "mkdir -p \"{dataPath}/logs\"; PORT=9527; if [ -f \"{dataPath}/logs/lx.port\" ]; then PORT=$(cat \"{dataPath}/logs/lx.port\" 2>/dev/null | tr -d ' \\n\\r'); fi; [ -z \"$PORT\" ] && PORT=9527; IP=\"{lanIp}\"; echo \"==== 洛雪局域网访问 ====\"; echo \"端口: $PORT（改端口请在「启动洛雪」里填）\"; PIDF=\"{dataPath}/logs/lx.pid\"; if [ -f \"$PIDF\" ] && kill -0 \"$(cat \"$PIDF\")\" 2>/dev/null; then echo \"进程: 运行中 (pid=$(cat \"$PIDF\"))\"; elif command -v curl >/dev/null 2>&1 && CODE=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 2 \"http://127.0.0.1:$PORT/music/\" 2>/dev/null) && [ -n \"$CODE\" ] && [ \"$CODE\" != \"000\" ]; then echo \"进程: 服务可访问\"; else echo \"进程: 未检测到（请先点「启动洛雪」）\"; fi; CODE=\"\"; if command -v curl >/dev/null 2>&1; then CODE=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 2 \"http://127.0.0.1:$PORT/music/\" 2>/dev/null); fi; if [ -n \"$CODE\" ] && [ \"$CODE\" != \"000\" ]; then echo \"本机访问: HTTP $CODE\"; elif grep -q 'BIND=0.0.0.0' \"{dataPath}/logs/boot.log\" 2>/dev/null; then echo \"本机访问: 已按 0.0.0.0 启动（见 boot.log）\"; else echo \"本机访问: 请确认已启动洛雪\"; fi; if [ -n \"$IP\" ]; then echo \"本机局域网 IP: $IP\"; echo \"播放器: http://$IP:$PORT/music/\"; echo \"管理后台: http://$IP:$PORT/\"; printf '%s\\n' \"$IP\" > \"{dataPath}/logs/lan_ip.txt\"; printf 'http://%s:%s/music/\\n' \"$IP\" \"$PORT\" > \"{dataPath}/logs/lan_player.txt\"; printf 'http://%s:%s/\\n' \"$IP\" \"$PORT\" > \"{dataPath}/logs/lan_admin.txt\"; printf 'http://127.0.0.1:%s/music/\\n' \"$PORT\" > \"{dataPath}/logs/local_player.txt\"; echo; echo \"同一 WiFi 下用手机/电脑浏览器打开上方播放器地址\"; else echo \"未探测到局域网 IP（请确认手机已连 WiFi）\"; rm -f \"{dataPath}/logs/lan_player.txt\" \"{dataPath}/logs/lan_admin.txt\" \"{dataPath}/logs/lan_ip.txt\"; fi",
+                    "auto_execute": false,
+                    "show_output": true,
+                    "clicks": [
+                        {
+                            "title": "复制局域网播放器地址",
+                            "action": "copy_file",
+                            "value": "{dataPath}/logs/lan_player.txt"
+                        },
+                        {
+                            "title": "系统浏览器打开局域网播放器",
+                            "action": "open_file",
+                            "value": "{dataPath}/logs/lan_player.txt"
+                        },
+                        {
+                            "title": "打开本机播放器（仅本机）",
+                            "action": "webview_full_file",
+                            "value": "{dataPath}/logs/local_player.txt"
+                        }
+                    ]
+                },
+                {
+                    "id": "lx_log",
+                    "name": "查看启动日志",
+                    "description": "显示 data/logs/boot.log，用于排查起不来",
+                    "command": "PORT=9527; if [ -f \"{dataPath}/logs/lx.port\" ]; then PORT=$(cat \"{dataPath}/logs/lx.port\" 2>/dev/null | tr -d ' \\n\\r'); fi; [ -z \"$PORT\" ] && PORT=9527; echo \"==== boot.log ====\"; tail -n 120 \"{dataPath}/logs/boot.log\" 2>/dev/null || echo \"(尚无 boot.log，请先点启动洛雪)\"; echo; echo \"==== node path ====\"; ls -la \"{envRootPath}/../nodejs/bin/node\" \"{envRootPath}/../nodejs/node\" 2>/dev/null; echo; echo \"==== 端口 $PORT ====\"; if command -v curl >/dev/null 2>&1; then curl -s -o /dev/null -w \"本机 HTTP %{http_code}\\n\" --connect-timeout 2 \"http://127.0.0.1:$PORT/music/\" 2>/dev/null; else echo \"(无 curl，请看 boot.log)\"; fi; grep 'BIND=\\|PORT=\\|started pid' \"{dataPath}/logs/boot.log\" 2>/dev/null | tail -n 8",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "lx_open",
+                    "name": "打开播放器",
+                    "description": "全屏打开本机网页播放器（不重启服务）",
+                    "command": "echo open",
+                    "auto_execute": false,
+                    "show_output": false,
+                    "clicks": [
+                        {
+                            "title": "打开播放器",
+                            "action": "webview_full",
+                            "value": "http://127.0.0.1:9527/music/"
+                        }
+                    ]
+                },
+                {
+                    "id": "lx_stop",
+                    "name": "停止洛雪",
+                    "description": "结束本机 lxserver 进程",
+                    "command": "PIDF=\"{dataPath}/logs/lx.pid\"; if [ -f \"$PIDF\" ]; then kill \"$(cat \"$PIDF\")\" 2>/dev/null; rm -f \"$PIDF\"; fi; for p in $(ps -A -o PID= -o ARGS= 2>/dev/null | awk '/\\/node/ && /lxserver\\/bin\\/start\\.js/ {print $1}'); do kill \"$p\" 2>/dev/null; done; echo stopped",
+                    "auto_execute": false,
+                    "show_output": true
+                }
+            ],
+            "downloads": [
+                {
+                    "arch": "arm64-v8a",
+                    "url": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/lxserver-android-arm64.zip",
+                    "size": "23 MB",
+                    "pan": {
+                        "match": "lxserver-android-arm64.zip"
+                    },
+                    "mirrors": {
+                        "本地9978": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/lxserver-android-arm64.zip"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "drpy-node",
+            "group": "tools",
+            "version": "1.4.9",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_drpy-node.jpg?v=20260723c",
+            "auto_install": false,
+            "available": true,
+            "show": true,
+            "info": "道长 drpyS（drpy-node）本机版：本地 Node 影视聚合服务。\n依赖：先安装 nodejs 运行时（未装会在启动时明确提示）。\n\n【怎么打开页面】\n本机包默认关掉网页 Basic 登录（壳子内置浏览器不弹账号框，否则只会显示 Authentication required）。\n直接打开首页即可：http://127.0.0.1:5757/\n\n【默认密码 · 请收藏】\n· 配置接口密码 API_PWD / URL 参数 pwd= ：dzyyds\n· 配置示例：http://127.0.0.1:5757/config/1?healthy=1&pwd=dzyyds\n· 管理后台：http://127.0.0.1:5757/apps/admin\n  （若仍要登录，账号 admin / 密码 drpys；Cookie 码默认也是 drpys）\n\n安装后点「启动 drpyS」，等约 8～12 秒再打开首页或复制配置。\n局域网：同一 WiFi 下用「查看局域网地址」。\n注意：官方推荐 Node 18～22；市场 nodejs 为 25.x，异常时请看日志。",
+            "var_path": {
+                "PATH": "../nodejs/bin",
+                "LD_LIBRARY_PATH": "../nodejs/lib",
+                "OPENSSL_CONF": "/dev/null",
+                "NODE_PATH": "../nodejs/lib/node_modules"
+            },
+            "mkdir": [
+                "data",
+                "cache",
+                "logs"
+            ],
+            "commands": [
+                {
+                    "id": "drpy_creds",
+                    "name": "默认账号密码",
+                    "description": "管理后台 / 接口密码说明（可随时查看）",
+                    "command": "cat <<'EOF'\n【默认密码 · 请收藏】\n1) 首页（本机包可直接打开，一般不用账号）\n   http://127.0.0.1:5757/\n\n2) 配置接口密码 API_PWD / URL 里 pwd=\n   密码: dzyyds\n   示例: http://127.0.0.1:5757/config/1?healthy=1&pwd=dzyyds\n\n3) 管理后台 http://127.0.0.1:5757/apps/admin\n   若页面要登录：账号 admin / 密码 drpys\n   （Cookie 相关默认码也是 drpys）\n\n说明：壳子内置浏览器不会弹 Basic 登录框；若看到 Authentication required，\n请点「停止 drpyS」后再「启动」（本机包已默认关 Basic）。\nEOF",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "drpy_start",
+                    "name": "启动 drpyS",
+                    "description": "后台启动；已在跑则直接成功；日志 data/logs/boot.log",
+                    "command": "LOGF=\"{dataPath}/logs/boot.log\"; mkdir -p \"{dataPath}/logs\"; echo \"[boot] $(date) begin\" > \"$LOGF\"; echo \"[progress] 8 写入启动日志…\" >> \"$LOGF\"; echo \"[boot] root={envRootPath}\" >> \"$LOGF\"; if ! cd \"{envRootPath}\"; then echo \"[fail] cd envRootPath\" >> \"$LOGF\"; exit 1; fi; echo \"[boot] cwd=$(pwd)\" >> \"$LOGF\"; echo \"[progress] 15 进入安装目录…\" >> \"$LOGF\"; if [ -f .env ]; then grep -vE \"^[[:space:]]*API_AUTH_NAME=|^[[:space:]]*API_AUTH_CODE=\" .env > .env.nobasic 2>/dev/null && mv .env.nobasic .env && echo \"[boot] stripped API_AUTH_* from .env (WebView has no Basic dialog)\" >> \"$LOGF\"; fi; export LD_LIBRARY_PATH=\"{envRootPath}/../nodejs/lib:${LD_LIBRARY_PATH}\"; export OPENSSL_CONF=/dev/null; echo \"[boot] LD_LIBRARY_PATH=$LD_LIBRARY_PATH\" >> \"$LOGF\"; echo \"[progress] 25 挂载 Node 动态库…\" >> \"$LOGF\"; if command -v curl >/dev/null 2>&1; then CODE=$(curl -s -o /dev/null -w \"%{http_code}\" --connect-timeout 2 http://127.0.0.1:{port}/ 2>/dev/null); if [ -n \"$CODE\" ] && [ \"$CODE\" != \"000\" ]; then echo \"[boot] already running http=$CODE port={port}\" >> \"$LOGF\"; echo \"[progress] 100 服务已在运行\" >> \"$LOGF\"; echo \"{port}\" > \"{dataPath}/logs/drpy.port\"; printf \"http://127.0.0.1:%s/\\n\" \"{port}\" > \"{dataPath}/logs/local_home.txt\"; printf \"http://127.0.0.1:%s/config/1?healthy=1&pwd=dzyyds\\n\" \"{port}\" > \"{dataPath}/logs/local_config.txt\"; echo \"[boot] ok (reuse)\" >> \"$LOGF\"; exit 0; fi; fi; NODE=\"\"; NODE=$(command -v node 2>/dev/null); if [ -z \"$NODE\" ] || [ ! -f \"$NODE\" ]; then for c in \"{envRootPath}/../nodejs/bin/node\" \"{envRootPath}/../nodejs/node\"; do if [ -f \"$c\" ]; then NODE=\"$c\"; break; fi; done; fi; if [ -z \"$NODE\" ] || [ ! -f \"$NODE\" ]; then mkdir -p \"{dataPath}/logs\" \"/storage/emulated/0/VodPlus/EnvFiles/config\"; DIAG=\"/storage/emulated/0/VodPlus/EnvFiles/config/node_missing_diag.txt\"; { echo \"[fail] 未找到 node 可执行文件（lab/nodejs/bin/node）\"; echo \"请强制重装「nodejs」后再启动。\"; echo \"envRoot={envRootPath}\"; echo \"PATH=$PATH\"; echo \"==== ls ../nodejs ====\"; ls -la \"{envRootPath}/../nodejs\" 2>&1; echo \"==== ls ../nodejs/bin ====\"; ls -la \"{envRootPath}/../nodejs/bin\" 2>&1; echo \"==== command -v node ====\"; command -v node 2>&1; } > \"{dataPath}/logs/boot.log\"; cp \"{dataPath}/logs/boot.log\" \"$DIAG\" 2>/dev/null; exit 1; fi; if [ ! -f \"{envRootPath}/index.js\" ]; then echo \"[fail] index.js missing\" >> \"$LOGF\"; exit 1; fi; echo \"[boot] NODE=$NODE\" >> \"$LOGF\"; echo \"[progress] 40 检查 Node 可执行文件…\" >> \"$LOGF\"; \"$NODE\" -v >> \"$LOGF\" 2>&1; echo \"[progress] 50 Node 版本已确认，准备拉起进程…\" >> \"$LOGF\"; PIDF=\"{dataPath}/logs/drpy.pid\"; if [ -f \"$PIDF\" ]; then kill \"$(cat \"$PIDF\")\" 2>/dev/null; rm -f \"$PIDF\"; fi; for p in $(ps -A -o PID= -o NAME= 2>/dev/null | awk '$2==\"node\"{print $1}'); do cmdl=$(tr \"\\0\" \" \" < /proc/$p/cmdline 2>/dev/null); case \"$cmdl\" in *start.mjs*) kill \"$p\" 2>/dev/null;; esac; done; sleep 1; ENTRY=\"./bin/start.mjs\"; if [ ! -f \"$ENTRY\" ]; then ENTRY=\"./index.js\"; fi; echo \"[boot] HOST=0.0.0.0 PORT={port} entry=$ENTRY\" >> \"$LOGF\"; CATVOD_ANDROID=1 NODE_ENV=production LOG_WITH_FILE=0 PORT={port} HOST=0.0.0.0 WSPORT={wsport} nohup \"$NODE\" \"$ENTRY\" >> \"$LOGF\" 2>&1 & echo $! > \"$PIDF\"; echo \"{port}\" > \"{dataPath}/logs/drpy.port\"; printf \"http://127.0.0.1:%s/\\n\" \"{port}\" > \"{dataPath}/logs/local_home.txt\"; printf \"http://127.0.0.1:%s/config/1?healthy=1&pwd=dzyyds\\n\" \"{port}\" > \"{dataPath}/logs/local_config.txt\"; echo \"[boot] started pid=$(cat \"$PIDF\") entry=$ENTRY port={port}\" >> \"$LOGF\"; echo \"[progress] 70 进程已启动，等待监听端口…\" >> \"$LOGF\"; sleep 6; if kill -0 \"$(cat \"$PIDF\")\" 2>/dev/null; then echo \"[boot] ok\" >> \"$LOGF\"; echo \"[progress] 100 启动成功\" >> \"$LOGF\"; exit 0; fi; CODE=\"\"; if command -v curl >/dev/null 2>&1; then CODE=$(curl -s -o /dev/null -w \"%{http_code}\" --connect-timeout 2 http://127.0.0.1:{port}/ 2>/dev/null); fi; if [ -n \"$CODE\" ] && [ \"$CODE\" != \"000\" ]; then echo \"[boot] ok via http=$CODE\" >> \"$LOGF\"; echo \"[progress] 100 启动成功（HTTP 已通）\" >> \"$LOGF\"; exit 0; fi; echo \"[boot] process exited\" >> \"$LOGF\"; exit 1",
+                    "auto_execute": false,
+                    "background": true,
+                    "show_output": false,
+                    "variables": [
+                        {
+                            "key": "port",
+                            "name": "端口",
+                            "type": "number",
+                            "default": "5757",
+                            "hint": "主服务端口，一般用默认 5757",
+                            "required": true,
+                            "min": 1024,
+                            "max": 65535
+                        },
+                        {
+                            "key": "wsport",
+                            "name": "WebSocket端口",
+                            "type": "number",
+                            "default": "57575",
+                            "hint": "日志/插件用，一般不用改",
+                            "required": true,
+                            "min": 1024,
+                            "max": 65535
+                        }
+                    ],
+                    "clicks": [
+                        {
+                            "title": "打开首页（全屏）",
+                            "action": "webview_full",
+                            "value": "http://127.0.0.1:{port}/"
+                        },
+                        {
+                            "title": "打开管理后台",
+                            "action": "webview",
+                            "style": "dialog",
+                            "value": "http://127.0.0.1:{port}/apps/admin"
+                        },
+                        {
+                            "title": "复制配置接口",
+                            "action": "copy",
+                            "value": "http://127.0.0.1:{port}/config/1?healthy=1&pwd=dzyyds"
+                        },
+                        {
+                            "title": "系统浏览器打开首页",
+                            "action": "open",
+                            "value": "http://127.0.0.1:{port}/"
+                        },
+                        {
+                            "title": "使用说明",
+                            "action": "alert",
+                            "value": "【打开页面】\n首页可直接打开：http://127.0.0.1:5757/\n（本机包已关网页 Basic，避免 WebView 只显示 Authentication required）\n\n【默认密码】\n配置接口 pwd= / API_PWD：dzyyds\n管理后台（如需）：账号 admin / 密码 drpys\n\n【步骤】\n1. 先装 nodejs，再装 drpy-node\n2. 点「启动 drpyS」后等 8～12 秒\n3. 打开首页，或复制配置接口到壳子点播\n4. 点「默认账号密码」可随时再看说明"
+                        },
+                        {
+                            "title": "默认账号密码",
+                            "action": "alert",
+                            "value": "【默认密码 · 请收藏】\n1) 首页（本机包可直接打开，一般不用账号）\n   http://127.0.0.1:5757/\n\n2) 配置接口密码 API_PWD / URL 里 pwd=\n   密码: dzyyds\n   示例: http://127.0.0.1:5757/config/1?healthy=1&pwd=dzyyds\n\n3) 管理后台 http://127.0.0.1:5757/apps/admin\n   若页面要登录：账号 admin / 密码 drpys\n   （Cookie 相关默认码也是 drpys）\n\n说明：壳子内置浏览器不会弹 Basic 登录框；若看到 Authentication required，\n请点「停止 drpyS」后再「启动」（本机包已默认关 Basic）。"
+                        }
+                    ]
+                },
+                {
+                    "id": "drpy_lan",
+                    "name": "查看局域网地址",
+                    "description": "用本机 WiFi IP 生成局域网首页/配置链接（端口沿用启动时填的，默认 5757）",
+                    "command": "mkdir -p \"{dataPath}/logs\"; PORT=5757; if [ -f \"{dataPath}/logs/drpy.port\" ]; then PORT=$(cat \"{dataPath}/logs/drpy.port\" 2>/dev/null | tr -d ' \\n\\r'); fi; [ -z \"$PORT\" ] && PORT=5757; IP=\"{lanIp}\"; echo \"==== drpyS 局域网访问 ====\"; echo \"端口: $PORT\"; PIDF=\"{dataPath}/logs/drpy.pid\"; if [ -f \"$PIDF\" ] && kill -0 \"$(cat \"$PIDF\")\" 2>/dev/null; then echo \"进程: 运行中 (pid=$(cat \"$PIDF\"))\"; elif command -v curl >/dev/null 2>&1 && CODE=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 2 \"http://127.0.0.1:$PORT/\" 2>/dev/null) && [ -n \"$CODE\" ] && [ \"$CODE\" != \"000\" ]; then echo \"进程: 服务可访问\"; else echo \"进程: 未检测到（请先点「启动 drpyS」）\"; fi; if [ -n \"$IP\" ]; then echo \"本机局域网 IP: $IP\"; echo \"首页: http://$IP:$PORT/\"; echo \"配置: http://$IP:$PORT/config/1?healthy=1&pwd=dzyyds\"; echo \"管理: http://$IP:$PORT/apps/admin\"; printf '%s\\n' \"$IP\" > \"{dataPath}/logs/lan_ip.txt\"; printf 'http://%s:%s/\\n' \"$IP\" \"$PORT\" > \"{dataPath}/logs/lan_home.txt\"; printf 'http://%s:%s/config/1?healthy=1&pwd=dzyyds\\n' \"$IP\" \"$PORT\" > \"{dataPath}/logs/lan_config.txt\"; printf 'http://127.0.0.1:%s/\\n' \"$PORT\" > \"{dataPath}/logs/local_home.txt\"; echo; echo \"同一 WiFi 下用手机/电脑浏览器打开上方地址\"; else echo \"未探测到局域网 IP（请确认手机已连 WiFi）\"; rm -f \"{dataPath}/logs/lan_home.txt\" \"{dataPath}/logs/lan_config.txt\" \"{dataPath}/logs/lan_ip.txt\"; fi",
+                    "auto_execute": false,
+                    "show_output": true,
+                    "clicks": [
+                        {
+                            "title": "复制局域网首页",
+                            "action": "copy_file",
+                            "value": "{dataPath}/logs/lan_home.txt"
+                        },
+                        {
+                            "title": "复制局域网配置接口",
+                            "action": "copy_file",
+                            "value": "{dataPath}/logs/lan_config.txt"
+                        },
+                        {
+                            "title": "打开本机首页",
+                            "action": "webview_full_file",
+                            "value": "{dataPath}/logs/local_home.txt"
+                        }
+                    ]
+                },
+                {
+                    "id": "drpy_log",
+                    "name": "查看启动日志",
+                    "description": "显示 data/logs/boot.log，用于排查起不来",
+                    "command": "PORT=5757; if [ -f \"{dataPath}/logs/drpy.port\" ]; then PORT=$(cat \"{dataPath}/logs/drpy.port\" 2>/dev/null | tr -d ' \\n\\r'); fi; [ -z \"$PORT\" ] && PORT=5757; echo \"==== boot.log ====\"; tail -n 160 \"{dataPath}/logs/boot.log\" 2>/dev/null || echo \"(尚无 boot.log，请先点启动 drpyS)\"; echo; echo \"==== node path ====\"; ls -la \"{envRootPath}/../nodejs/bin/node\" \"{envRootPath}/../nodejs/node\" 2>/dev/null; echo; echo \"==== 入口文件 ====\"; ls -la \"{envRootPath}/bin/start.mjs\" \"{envRootPath}/index.js\" \"{envRootPath}/node_modules\" 2>/dev/null; echo; echo \"==== 端口 $PORT ====\"; if command -v curl >/dev/null 2>&1; then curl -s -o /dev/null -w \"本机 HTTP %{http_code}\\n\" --connect-timeout 2 \"http://127.0.0.1:$PORT/\" 2>/dev/null; else echo \"(无 curl，请看 boot.log)\"; fi; grep 'PORT=\\|HOST=\\|started pid\\|Server started' \"{dataPath}/logs/boot.log\" 2>/dev/null | tail -n 12",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "drpy_open",
+                    "name": "打开首页",
+                    "description": "全屏打开本机 drpyS 首页（不重启服务）",
+                    "command": "echo open",
+                    "auto_execute": false,
+                    "show_output": false,
+                    "clicks": [
+                        {
+                            "title": "打开首页",
+                            "action": "webview_full",
+                            "value": "http://127.0.0.1:5757/"
+                        },
+                        {
+                            "title": "复制配置接口",
+                            "action": "copy",
+                            "value": "http://127.0.0.1:5757/config/1?healthy=1&pwd=dzyyds"
+                        }
+                    ]
+                },
+                {
+                    "id": "drpy_stop",
+                    "name": "停止 drpyS",
+                    "description": "结束本机 drpy-node 进程",
+                    "command": "PIDF=\"{dataPath}/logs/drpy.pid\"; if [ -f \"$PIDF\" ]; then kill \"$(cat \"$PIDF\")\" 2>/dev/null; rm -f \"$PIDF\"; fi; for p in $(ps -A -o PID= -o ARGS= 2>/dev/null | awk '/\\/node/ && /drpy-node\\/(bin\\/start\\.mjs|index\\.js)/ {print $1}'); do kill \"$p\" 2>/dev/null; done; echo stopped",
+                    "auto_execute": false,
+                    "show_output": true
+                }
+            ],
+            "downloads": [
+                {
+                    "arch": "arm64-v8a",
+                    "url": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/drpy-node.zip",
+                    "size": "约 120 MB",
+                    "pan": {
+                        "match": "drpy-node.zip"
+                    },
+                    "mirrors": {
+                        "本地9978": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/drpy-node.zip"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "ssh-panel",
+            "group": "tools",
+            "version": "1.2.3",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_ssh-panel.jpg?v=20260723c",
+            "auto_install": false,
+            "available": true,
+            "show": true,
+            "info": "SSH 面板（A 档 + AI + 文件管理）。\n依赖：先装 nodejs（未装会在启动时明确提示）；AI 用环境市场「设置 → AI大模型」Key（与 lab-ai 共用）。\n能力：主机管理、Web 终端、SFTP 文件、监控；AI 可查状态/日志/Docker/读写文件。\n打开：http://127.0.0.1:18888/ →「文件」「AI运维」。\n数据：包内 data/hosts.json（含密码/私钥，勿外传）。\nv1.2：SFTP 文件管理（列表/上传下载/编辑/删改）+ AI list_dir/read_file/write_file。\nv1.2.2：监控卡片化、AI Markdown 富文本、默认选中第一台主机。\nv1.2.3：AI 预判提示词可点继续 + 专注对话模式。",
+            "var_path": {
+                "PATH": "../nodejs/bin",
+                "LD_LIBRARY_PATH": "../nodejs/lib",
+                "OPENSSL_CONF": "/dev/null",
+                "NODE_PATH": "../nodejs/lib/node_modules"
+            },
+            "mkdir": [
+                "data",
+                "logs"
+            ],
+            "commands": [
+                {
+                    "id": "ssh_start",
+                    "name": "启动 SSH",
+                    "description": "后台启动面板；绑定 0.0.0.0；日志 data/logs/boot.log",
+                    "command": "mkdir -p \"{dataPath}/logs\"; cd \"{envRootPath}\" || exit 1; NODE=\"\"; NODE=$(command -v node 2>/dev/null); if [ -z \"$NODE\" ] || [ ! -f \"$NODE\" ]; then for c in \"{envRootPath}/../nodejs/bin/node\" \"{envRootPath}/../nodejs/node\"; do if [ -f \"$c\" ]; then NODE=\"$c\"; break; fi; done; fi; if [ -z \"$NODE\" ] || [ ! -f \"$NODE\" ]; then mkdir -p \"{dataPath}/logs\" \"/storage/emulated/0/VodPlus/EnvFiles/config\"; DIAG=\"/storage/emulated/0/VodPlus/EnvFiles/config/node_missing_diag.txt\"; { echo \"[fail] 未找到 node 可执行文件（lab/nodejs/bin/node）\"; echo \"请强制重装「nodejs」后再启动。\"; echo \"envRoot={envRootPath}\"; echo \"PATH=$PATH\"; echo \"==== ls ../nodejs ====\"; ls -la \"{envRootPath}/../nodejs\" 2>&1; echo \"==== ls ../nodejs/bin ====\"; ls -la \"{envRootPath}/../nodejs/bin\" 2>&1; echo \"==== command -v node ====\"; command -v node 2>&1; } > \"{dataPath}/logs/boot.log\"; cp \"{dataPath}/logs/boot.log\" \"$DIAG\" 2>/dev/null; exit 1; fi; LOGF=\"{dataPath}/logs/boot.log\"; PIDF=\"{dataPath}/logs/ssh.pid\"; PORT=\"{port}\"; echo \"[boot] $(date)\" > \"$LOGF\"; echo \"[boot] NODE=$NODE PORT=$PORT\" >> \"$LOGF\"; \"$NODE\" -v >> \"$LOGF\" 2>&1; if command -v curl >/dev/null 2>&1; then CODE=$(curl -s -o /dev/null -w \"%{http_code}\" --connect-timeout 2 \"http://127.0.0.1:$PORT/api/health\" 2>/dev/null); if [ -n \"$CODE\" ] && [ \"$CODE\" != \"000\" ]; then echo \"[boot] already running http=$CODE\" >> \"$LOGF\"; echo \"$PORT\" > \"{dataPath}/logs/ssh.port\"; printf \"http://127.0.0.1:%s/\\n\" \"$PORT\" > \"{dataPath}/logs/local_home.txt\"; echo \"[boot] ok\" >> \"$LOGF\"; exit 0; fi; fi; if [ -f \"$PIDF\" ]; then kill \"$(cat \"$PIDF\")\" 2>/dev/null; kill -9 \"$(cat \"$PIDF\")\" 2>/dev/null; rm -f \"$PIDF\"; fi; for p in $(ps -A -o PID= -o ARGS= 2>/dev/null | awk '/\\/node/ && /ssh-panel\\/(bin\\/start\\.mjs|server\\.mjs)/ {print $1}'); do echo \"[boot] kill old pid=$p\" >> \"$LOGF\"; kill \"$p\" 2>/dev/null; kill -9 \"$p\" 2>/dev/null; done; sleep 1; export LD_LIBRARY_PATH=\"{envRootPath}/../nodejs/lib:${LD_LIBRARY_PATH}\"; ENTRY=\"./bin/start.mjs\"; if [ ! -f \"$ENTRY\" ]; then ENTRY=\"./server.mjs\"; fi; if [ ! -d \"./node_modules/ssh2\" ]; then echo \"[fail] missing node_modules/ssh2\" >> \"$LOGF\"; exit 1; fi; CATVOD_ANDROID=1 NODE_ENV=production PORT=$PORT HOST=0.0.0.0 AI_CONFIG=\"/storage/emulated/0/VodPlus/EnvFiles/config/ai.json\" LAB_ROOT=\"$(cd \"{envRootPath}/..\" && pwd)\" SSH_PANEL_DATA=\"{dataPath}\" nohup \"$NODE\" \"$ENTRY\" >> \"$LOGF\" 2>&1 & echo $! > \"$PIDF\"; echo \"$PORT\" > \"{dataPath}/logs/ssh.port\"; printf \"http://127.0.0.1:%s/\\n\" \"$PORT\" > \"{dataPath}/logs/local_home.txt\"; echo \"[boot] started pid=$(cat \"$PIDF\")\" >> \"$LOGF\"; sleep 2; if kill -0 \"$(cat \"$PIDF\")\" 2>/dev/null; then echo \"[boot] ok\" >> \"$LOGF\"; exit 0; fi; if command -v curl >/dev/null 2>&1; then CODE=$(curl -s -o /dev/null -w \"%{http_code}\" --connect-timeout 2 \"http://127.0.0.1:$PORT/api/health\" 2>/dev/null); if [ -n \"$CODE\" ] && [ \"$CODE\" != \"000\" ]; then echo \"[boot] ok via health http=$CODE\" >> \"$LOGF\"; exit 0; fi; fi; echo \"[boot] process exited\" >> \"$LOGF\"; exit 1",
+                    "auto_execute": false,
+                    "background": true,
+                    "show_output": false,
+                    "variables": [
+                        {
+                            "key": "port",
+                            "name": "端口",
+                            "type": "number",
+                            "default": "18888",
+                            "hint": "面板端口，默认 18888",
+                            "required": true,
+                            "min": 1024,
+                            "max": 65535
+                        }
+                    ],
+                    "clicks": [
+                        {
+                            "title": "打开面板（全屏）",
+                            "action": "webview_full",
+                            "value": "http://127.0.0.1:{port}/"
+                        },
+                        {
+                            "title": "系统浏览器打开",
+                            "action": "open",
+                            "value": "http://127.0.0.1:{port}/"
+                        },
+                        {
+                            "title": "使用说明",
+                            "action": "alert",
+                            "value": "1. 先装 nodejs，再装 ssh-panel\n2. 设置→AI大模型 填 Key（与 lab-ai 共用）\n3. 启动 SSH → 打开面板\n4. 「文件」页可浏览/上传/编辑；「AI运维」可让 AI 操作\n5. 装 Docker / 改系统文件需确认；凭据在 data/hosts.json"
+                        }
+                    ]
+                },
+                {
+                    "id": "ssh_lan",
+                    "name": "查看局域网地址",
+                    "description": "生成局域网面板地址",
+                    "command": "mkdir -p \"{dataPath}/logs\"; PORT=18888; if [ -f \"{dataPath}/logs/ssh.port\" ]; then PORT=$(cat \"{dataPath}/logs/ssh.port\" | tr -d \" \\n\\r\"); fi; [ -z \"$PORT\" ] && PORT=18888; IP=\"{lanIp}\"; echo \"==== ssh-panel LAN ====\"; echo \"port: $PORT\"; if [ -n \"$IP\" ]; then echo \"panel: http://$IP:$PORT/\"; printf \"http://%s:%s/\\n\" \"$IP\" \"$PORT\" > \"{dataPath}/logs/lan_home.txt\"; else echo \"no lan ip\"; fi",
+                    "auto_execute": false,
+                    "show_output": true,
+                    "clicks": [
+                        {
+                            "title": "复制局域网地址",
+                            "action": "copy_file",
+                            "value": "{dataPath}/logs/lan_home.txt"
+                        },
+                        {
+                            "title": "打开本机面板",
+                            "action": "webview_full_file",
+                            "value": "{dataPath}/logs/local_home.txt"
+                        }
+                    ]
+                },
+                {
+                    "id": "ssh_log",
+                    "name": "查看启动日志",
+                    "description": "显示 boot.log",
+                    "command": "echo \"==== boot.log ====\"; tail -n 160 \"{dataPath}/logs/boot.log\" 2>/dev/null || echo \"(尚无日志)\"; echo; ls -la \"{envRootPath}/bin/start.mjs\" \"{envRootPath}/server.mjs\" \"{envRootPath}/node_modules/ssh2\" 2>/dev/null",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "ssh_open",
+                    "name": "打开面板",
+                    "description": "全屏打开（不重启）",
+                    "command": "echo open",
+                    "auto_execute": false,
+                    "show_output": false,
+                    "clicks": [
+                        {
+                            "title": "打开面板",
+                            "action": "webview_full",
+                            "value": "http://127.0.0.1:18888/"
+                        }
+                    ]
+                },
+                {
+                    "id": "ssh_stop",
+                    "name": "停止 SSH",
+                    "description": "结束 ssh-panel 进程",
+                    "command": "PIDF=\"{dataPath}/logs/ssh.pid\"; if [ -f \"$PIDF\" ]; then kill \"$(cat \"$PIDF\")\" 2>/dev/null; kill -9 \"$(cat \"$PIDF\")\" 2>/dev/null; rm -f \"$PIDF\"; fi; for p in $(ps -A -o PID= -o ARGS= 2>/dev/null | awk '/\\/node/ && /ssh-panel\\/(bin\\/start\\.mjs|server\\.mjs)/ {print $1}'); do kill \"$p\" 2>/dev/null; kill -9 \"$p\" 2>/dev/null; done; echo stopped",
+                    "auto_execute": false,
+                    "show_output": true
+                }
+            ],
+            "downloads": [
+                {
+                    "arch": "arm64-v8a",
+                    "url": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/ssh-panel.zip",
+                    "size": "约 5.1 MB",
+                    "pan": {
+                        "match": "ssh-panel.zip"
+                    },
+                    "mirrors": {
+                        "本地9978": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/ssh-panel.zip"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "danmu-api",
+            "group": "tools",
+            "version": "1.0.9",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_danmu-api.jpg?v=20260723c",
+            "auto_install": false,
+            "available": true,
+            "show": true,
+            "info": "弹幕 API 本机版。依赖 nodejs。\n【1.0.9】「打开本机 API」改走 jar 内置 WebView（WebpageBrowser）。\n【1.0.8】Java 托管启动；映射线路自动挂弹幕。\n本机 http://127.0.0.1:9321/feimao TOKEN=feimao",
+            "var_path": {
+                "PATH": "../nodejs/bin",
+                "LD_LIBRARY_PATH": "../nodejs/lib",
+                "OPENSSL_CONF": "/dev/null",
+                "NODE_PATH": "../nodejs/lib/node_modules"
+            },
+            "mkdir": [
+                "data",
+                "logs",
+                "config"
+            ],
+            "commands": [
+                {
+                    "id": "danmu_start",
+                    "name": "启动弹幕API",
+                    "description": "Java 托管启动（进程常驻，不会随脚本退出被杀）",
+                    "command": "RESP=$(curl -sS --connect-timeout 30 \"http://127.0.0.1:9978/proxy?do=danmuapi&action=start\" 2>/dev/null); echo \"$RESP\"; echo \"$RESP\" | grep -q '\"ok\":true' && exit 0; echo \"$RESP\" | grep -q '\"running\":true' && exit 0; exit 1",
+                    "auto_execute": true,
+                    "background": false,
+                    "show_output": true,
+                    "variables": [
+                        {
+                            "key": "port",
+                            "name": "端口",
+                            "type": "number",
+                            "default": "9321",
+                            "hint": "主 API 端口，一般用默认 9321",
+                            "required": true,
+                            "min": 1024,
+                            "max": 65535
+                        },
+                        {
+                            "key": "token",
+                            "name": "TOKEN",
+                            "type": "text",
+                            "default": "feimao",
+                            "hint": "URL 路径前缀，如 /feimao/api/v2/...",
+                            "required": true
+                        }
+                    ],
+                    "clicks": [
+                        {
+                            "title": "内置浏览器打开管理后台",
+                            "action": "webview_full",
+                            "value": "http://127.0.0.1:{port}/{token}/"
+                        },
+                        {
+                            "title": "复制本机 API 根地址",
+                            "action": "copy_file",
+                            "value": "{dataPath}/logs/local_api.txt"
+                        },
+                        {
+                            "title": "系统浏览器打开",
+                            "action": "open",
+                            "value": "http://127.0.0.1:{port}/{token}/"
+                        },
+                        {
+                            "title": "使用说明",
+                            "action": "alert",
+                            "value": "1. 先装 nodejs，再装 danmu-api（装完会自动启动）\n2. 点「启动」或「一键检测」会出现进度条，冷启动约 5～20 秒，请勿反复点\n3. 「内置浏览器打开管理后台」走壳自带 WebView（与洛雪一致）\n4. 本机根：http://127.0.0.1:9321/feimao\n5. 起不来看「查看启动日志」"
+                        }
+                    ]
+                },
+                {
+                    "id": "danmu_lan",
+                    "name": "查看局域网地址",
+                    "description": "用本机 WiFi IP 生成局域网 API 根地址（端口/TOKEN 沿用启动时）",
+                    "command": "mkdir -p \"{dataPath}/logs\"; PORT=9321; TOKEN=feimao; if [ -f \"{dataPath}/logs/danmu.port\" ]; then PORT=$(cat \"{dataPath}/logs/danmu.port\" 2>/dev/null | tr -d ' \\n\\r'); fi; if [ -f \"{dataPath}/logs/danmu.token\" ]; then TOKEN=$(cat \"{dataPath}/logs/danmu.token\" 2>/dev/null | tr -d ' \\n\\r'); fi; [ -z \"$PORT\" ] && PORT=9321; [ -z \"$TOKEN\" ] && TOKEN=feimao; IP=\"{lanIp}\"; echo \"==== 弹幕 API 局域网访问 ====\"; echo \"端口: $PORT  TOKEN: $TOKEN\"; PIDF=\"{dataPath}/logs/danmu.pid\"; if [ -f \"$PIDF\" ] && kill -0 \"$(cat \"$PIDF\")\" 2>/dev/null; then echo \"进程: 运行中 (pid=$(cat \"$PIDF\"))\"; elif command -v curl >/dev/null 2>&1 && CODE=$(curl -s -o /dev/null -w '%{http_code}' --connect-timeout 2 \"http://127.0.0.1:$PORT/$TOKEN/\" 2>/dev/null) && [ -n \"$CODE\" ] && [ \"$CODE\" != \"000\" ]; then echo \"进程: 服务可访问\"; else echo \"进程: 未检测到（请先点「启动弹幕API」）\"; fi; if [ -n \"$IP\" ]; then echo \"本机局域网 IP: $IP\"; echo \"API 根: http://$IP:$PORT/$TOKEN\"; echo \"搜索示例: http://$IP:$PORT/$TOKEN/api/v2/search/anime?keyword=片名\"; printf '%s\\n' \"$IP\" > \"{dataPath}/logs/lan_ip.txt\"; printf 'http://%s:%s/%s\\n' \"$IP\" \"$PORT\" \"$TOKEN\" > \"{dataPath}/logs/lan_api.txt\"; printf 'http://127.0.0.1:%s/%s\\n' \"$PORT\" \"$TOKEN\" > \"{dataPath}/logs/local_api.txt\"; echo; echo \"同一 WiFi 下用手机/电脑打开上方 API 根地址\"; else echo \"未探测到局域网 IP（请确认手机已连 WiFi）\"; rm -f \"{dataPath}/logs/lan_api.txt\" \"{dataPath}/logs/lan_ip.txt\"; fi",
+                    "auto_execute": false,
+                    "show_output": true,
+                    "clicks": [
+                        {
+                            "title": "内置浏览器打开本机 API",
+                            "action": "webview_full_file",
+                            "value": "{dataPath}/logs/local_api.txt"
+                        },
+                        {
+                            "title": "复制局域网 API 根地址",
+                            "action": "copy_file",
+                            "value": "{dataPath}/logs/lan_api.txt"
+                        },
+                        {
+                            "title": "复制本机 API 根地址",
+                            "action": "copy_file",
+                            "value": "{dataPath}/logs/local_api.txt"
+                        }
+                    ]
+                },
+                {
+                    "id": "danmu_probe",
+                    "name": "一键检测弹幕",
+                    "description": "未启动自动拉起（有进度条）；冷启动约 10～20 秒",
+                    "command": "PORT=9321; TOKEN=feimao; if [ -f \"{dataPath}/logs/danmu.port\" ]; then PORT=$(cat \"{dataPath}/logs/danmu.port\" 2>/dev/null | tr -d ' \\n\\r'); fi; if [ -f \"{dataPath}/logs/danmu.token\" ]; then TOKEN=$(cat \"{dataPath}/logs/danmu.token\" 2>/dev/null | tr -d ' \\n\\r'); fi; [ -z \"$PORT\" ] && PORT=9321; [ -z \"$TOKEN\" ] && TOKEN=feimao; KW=\"{keyword}\"; [ -z \"$KW\" ] && KW=\"斗罗大陆\"; echo \"[progress] 8 开始检测…\"; echo \"==== 一键检测弹幕 ====\"; echo \"端口=$PORT TOKEN=$TOKEN 关键词=$KW\"; NODE=\"\"; NODE=$(command -v node 2>/dev/null); if [ -z \"$NODE\" ] || [ ! -f \"$NODE\" ]; then for c in \"{envRootPath}/../nodejs/bin/node\" \"{envRootPath}/../nodejs/node\"; do if [ -f \"$c\" ]; then NODE=\"$c\"; break; fi; done; fi; if [ -z \"$NODE\" ] || [ ! -f \"$NODE\" ]; then echo \"[fail] 未找到 node：请先安装「nodejs」\"; exit 1; fi; echo \"[ok] nodejs: $($NODE -v 2>/dev/null)\"; export LD_LIBRARY_PATH=\"{envRootPath}/../nodejs/lib:${LD_LIBRARY_PATH}\"; export OPENSSL_CONF=/dev/null; http_code(){ \"$NODE\" -e 'const u=process.argv[1];const h=require(\"http\");const t=setTimeout(()=>{console.log(\"000\");process.exit(0)},2000);h.get(u,r=>{clearTimeout(t);console.log(String(r.statusCode||\"000\"));process.exit(0)}).on(\"error\",()=>{clearTimeout(t);console.log(\"000\");process.exit(0)})' \"$1\" 2>/dev/null; }; ROOT=\"http://127.0.0.1:$PORT/$TOKEN\"; CODE=$(http_code \"$ROOT/\"); echo \"[1] 服务根 $ROOT/  → HTTP $CODE\"; if [ -z \"$CODE\" ] || [ \"$CODE\" = \"000\" ]; then echo \"[progress] 25 服务未通，正在自动启动…\"; echo \"[auto] 服务未通，正在自动启动…\"; mkdir -p \"{dataPath}/logs\"; cd \"{envRootPath}\" || exit 1; if [ ! -f \"bin/start.mjs\" ]; then echo \"[fail] 缺 bin/start.mjs，请重装 danmu-api\"; exit 1; fi; PIDF=\"{dataPath}/logs/danmu.pid\"; LOGF=\"{dataPath}/logs/boot.log\"; if [ -f \"$PIDF\" ]; then kill \"$(cat \"$PIDF\")\" 2>/dev/null; rm -f \"$PIDF\"; fi; for p in $(ps -A -o PID= -o ARGS= 2>/dev/null | awk '/\\/node/ && /danmu-api\\/(bin\\/start\\.mjs|danmu_api\\/server\\.js)/ {print $1}'); do kill \"$p\" 2>/dev/null; done; sleep 1; echo \"[boot] auto-start $(date)\" > \"$LOGF\"; export CATVOD_ANDROID=1 DANMU_BIND_HOST=127.0.0.1 NODE_ENV=production PORT=$PORT DANMU_API_PORT=$PORT TOKEN=$TOKEN DANMU_OUTPUT_FORMAT=xml; echo $PORT > \"{dataPath}/logs/danmu.port\"; echo $TOKEN > \"{dataPath}/logs/danmu.token\"; printf 'http://127.0.0.1:%s/%s\\n' \"$PORT\" \"$TOKEN\" > \"{dataPath}/logs/local_api.txt\"; \"$NODE\" -e 'const {spawn}=require(\"child_process\");const fs=require(\"fs\");const node=process.argv[1],log=process.argv[2],cwd=process.argv[3],pidf=process.argv[4];const out=fs.openSync(log,\"a\");const c=spawn(node,[\"./bin/start.mjs\"],{cwd,detached:true,stdio:[\"ignore\",out,out],env:process.env});fs.writeFileSync(pidf,String(c.pid));c.unref();' \"$NODE\" \"$LOGF\" \"{envRootPath}\" \"$PIDF\" >> \"$LOGF\" 2>&1; i=0; CODE=\"000\"; while [ $i -lt 25 ]; do i=$((i+1)); PCT=$((30 + i * 2)); [ \"$PCT\" -gt 85 ] && PCT=85; echo \"[progress] $PCT 自动启动中… ${i}/25 秒\"; CODE=$(http_code \"$ROOT/\"); if [ -n \"$CODE\" ] && [ \"$CODE\" != \"000\" ]; then echo \"[progress] 90 启动成功，开始搜索…\"; echo \"[auto] 启动成功 HTTP $CODE（约 ${i}s）\"; break; fi; sleep 1; done; echo \"[1b] 服务根 → HTTP $CODE\"; if [ -z \"$CODE\" ] || [ \"$CODE\" = \"000\" ]; then echo \"[fail] 自动启动后仍不通\"; tail -n 40 \"$LOGF\"; cp \"$LOGF\" \"/storage/emulated/0/VodPlus/EnvFiles/config/danmu_boot_copy.txt\" 2>/dev/null; exit 1; fi; fi; echo \"[progress] 92 正在搜索…\"; echo \"[2] 搜索…\"; BODY=$(\"$NODE\" -e 'const http=require(\"http\");const kw=encodeURIComponent(process.argv[1]);const port=process.argv[2];const token=process.argv[3];const u=\"http://127.0.0.1:\"+port+\"/\"+token+\"/api/v2/search/anime?keyword=\"+kw;const t=setTimeout(()=>{console.log(\"\");process.exit(0)},20000);http.get(u,r=>{let d=\"\";r.on(\"data\",c=>d+=c);r.on(\"end\",()=>{clearTimeout(t);console.log(d)})}).on(\"error\",()=>{clearTimeout(t);console.log(\"\")})' \"$KW\" \"$PORT\" \"$TOKEN\" 2>/dev/null); echo \"$BODY\" | head -c 450; echo; ID=$(echo \"$BODY\" | sed -n 's/.*\"animeId\"[[:space:]]*:[[:space:]]*\\([0-9][0-9]*\\).*/\\1/p' | head -n 1); if [ -z \"$ID\" ]; then echo \"结论: ✅ 服务正常；本次关键词源站无匹配，换「进击的巨人」或「斗罗大陆」再测即可（不是环境坏了）\"; exit 0; fi; echo \"[3] animeId=$ID 拉 XML…\"; \"$NODE\" -e 'const http=require(\"http\");const u=process.argv[1];const t=setTimeout(()=>{console.log(\"HTTP 000\");process.exit(0)},15000);http.get(u,r=>{let d=\"\";r.on(\"data\",c=>d+=c);r.on(\"end\",()=>{clearTimeout(t);console.log(\"HTTP \"+r.statusCode+\" size=\"+d.length);console.log(d.slice(0,200));process.exit(0)})}).on(\"error\",()=>{clearTimeout(t);console.log(\"HTTP 000\")})' \"$ROOT/api/v2/comment/$ID?format=xml\" 2>/dev/null; echo; echo \"结论: ✅ 一键检测完成（见上方 HTTP）\"",
+                    "auto_execute": false,
+                    "show_output": true,
+                    "variables": [
+                        {
+                            "key": "keyword",
+                            "name": "搜索关键词",
+                            "type": "text",
+                            "default": "斗罗大陆",
+                            "hint": "用来测搜索/弹幕；海绵宝宝等可能无数据，建议用热门番剧名",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "id": "danmu_log",
+                    "name": "查看启动日志",
+                    "description": "显示 data/logs/boot.log，用于排查起不来",
+                    "command": "PORT=9321; TOKEN=feimao; if [ -f \"{dataPath}/logs/danmu.port\" ]; then PORT=$(cat \"{dataPath}/logs/danmu.port\" 2>/dev/null | tr -d ' \\n\\r'); fi; if [ -f \"{dataPath}/logs/danmu.token\" ]; then TOKEN=$(cat \"{dataPath}/logs/danmu.token\" 2>/dev/null | tr -d ' \\n\\r'); fi; [ -z \"$PORT\" ] && PORT=9321; [ -z \"$TOKEN\" ] && TOKEN=feimao; echo \"==== boot.log ====\"; tail -n 120 \"{dataPath}/logs/boot.log\" 2>/dev/null || echo \"(尚无 boot.log，请先点启动弹幕API)\"; echo; echo \"==== node path ====\"; ls -la \"{envRootPath}/../nodejs/bin/node\" \"{envRootPath}/../nodejs/node\" 2>/dev/null; echo; echo \"==== 入口 ====\"; ls -la \"{envRootPath}/bin/start.mjs\" \"{envRootPath}/danmu_api/server.js\" 2>/dev/null; echo; echo \"==== 端口 $PORT / $TOKEN ====\"; if command -v curl >/dev/null 2>&1; then curl -s -o /dev/null -w \"本机 HTTP %{http_code}\\n\" --connect-timeout 2 \"http://127.0.0.1:$PORT/$TOKEN/\" 2>/dev/null; else echo \"(无 curl，请看 boot.log)\"; fi; grep 'started pid\\|Server running\\|danmu-api' \"{dataPath}/logs/boot.log\" 2>/dev/null | tail -n 12",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "danmu_stop",
+                    "name": "停止弹幕API",
+                    "description": "结束本机 danmu-api 进程",
+                    "command": "RESP=$(curl -sS --connect-timeout 10 \"http://127.0.0.1:9978/proxy?do=danmuapi&action=stop\" 2>/dev/null); echo \"$RESP\"; echo stopped",
+                    "auto_execute": false,
+                    "show_output": true
+                }
+            ],
+            "downloads": [
+                {
+                    "arch": "arm64-v8a",
+                    "url": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/danmu-api.zip",
+                    "size": "约 4 MB",
+                    "pan": {
+                        "match": "danmu-api.zip"
+                    },
+                    "mirrors": {
+                        "本地9978": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/danmu-api.zip"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "simpletorrent",
+            "group": "network",
+            "cmd_name": "simple_torrent",
+            "version": "1.0.0",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_simpletorrent.jpg?v=20260723c",
+            "auto_install": false,
+            "mkdir": "/storage/emulated/0/Download/SimpleTorrent",
+            "available": false,
+            "show": false,
+            "info": "Go 磁力流媒体引擎，基于 anacrolix/torrent。支持 /list 和 /play 接口实现边下边播，内置 Web 管理面板、文件过滤、定时清理和壳子回调。\n（暂未上架：需先把压缩包上传到夸克总分享后再改 lab.json 打开）",
+            "binary_path": "bin/simple_torrent",
+            "commands": [
+                {
+                    "id": "server",
+                    "name": "启动服务",
+                    "description": "启动磁力流媒体引擎，提供 /list（解析文件列表）和 /play（边下边播）接口",
+                    "command": "simple_torrent --listen :{port} -d {download_dir} --extensions \"{extensions}\" --min-size {min_size} --box-port {boxport} --cache-clean-min {cache_clean_min} --clean-on-exit={clean_exit} --tracker-list-url \"{tracker_url}\" --dns {dns}",
+                    "auto_execute": false,
+                    "show_output": false,
+                    "background": true,
+                    "variables": [
+                        {
+                            "key": "port",
+                            "name": "服务端口",
+                            "type": "number",
+                            "default": "4000",
+                            "hint": "HTTP 服务监听端口",
+                            "required": true,
+                            "min": 1024,
+                            "max": 65535
+                        },
+                        {
+                            "key": "download_dir",
+                            "name": "下载目录",
+                            "type": "directory",
+                            "default": "/storage/emulated/0/Download/SimpleTorrent",
+                            "hint": "种子文件下载保存目录",
+                            "required": true
+                        },
+                        {
+                            "key": "extensions",
+                            "name": "允许的后缀",
+                            "type": "text",
+                            "default": ".mp4,.mkv,.avi,.ts",
+                            "hint": "只下载这些后缀的文件，逗号分隔，留空下载全部",
+                            "required": false
+                        },
+                        {
+                            "key": "min_size",
+                            "name": "最小文件(MB)",
+                            "type": "number",
+                            "default": "50",
+                            "hint": "低于此大小(MB)的文件不下载，0=不限制",
+                            "required": false,
+                            "min": 0
+                        },
+                        {
+                            "key": "boxport",
+                            "name": "壳子端口",
+                            "type": "number",
+                            "default": "9978",
+                            "hint": "壳子回调端口，/list 完成后通知刷新详情页，0=不回调",
+                            "required": false,
+                            "min": 0,
+                            "max": 65535
+                        },
+                        {
+                            "key": "cache_clean_min",
+                            "name": "清理间隔(分钟)",
+                            "type": "number",
+                            "default": "30",
+                            "hint": "定时清理空闲种子的下载文件（正在播放的不清理），0=不清理",
+                            "required": false,
+                            "min": 0
+                        },
+                        {
+                            "key": "clean_exit",
+                            "name": "停止时清空下载",
+                            "type": "switch",
+                            "default": "true",
+                            "hint": "停止服务时自动删除下载目录中的所有文件，释放磁盘空间",
+                            "required": false
+                        },
+                        {
+                            "key": "tracker_url",
+                            "name": "Tracker列表地址",
+                            "type": "text",
+                            "default": "https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_best.txt",
+                            "hint": "远程 Tracker 列表 URL，留空使用内置列表",
+                            "required": false
+                        },
+                        {
+                            "key": "dns",
+                            "name": "DNS 服务器",
+                            "type": "text",
+                            "default": "223.5.5.5",
+                            "hint": "自定义 DNS 服务器，解决 DHT/Tracker 域名无法解析的问题（推荐: 223.5.5.5 阿里DNS / 8.8.8.8 谷歌DNS）",
+                            "required": false
+                        }
+                    ],
+                    "clicks": [
+                        {
+                            "title": "管理面板",
+                            "action": "webview",
+                            "value": "http://127.0.0.1:{port}",
+                            "style": "dialog"
+                        },
+                        {
+                            "title": "服务状态",
+                            "action": "toast",
+                            "value": "SimpleTorrent 引擎监听端口: {port}"
+                        }
+                    ]
+                }
+            ],
+            "downloads": [
+                {
+                    "arch": "arm64-v8a",
+                    "url": "http://127.0.0.1:{serverPort}/file/VodPlus/EnvFiles/simple_torrent_arm64.7z",
+                    "size": "12 MB",
+                    "pan": {
+                        "match": "simple_torrent_arm64.7z"
+                    }
+                },
+                {
+                    "arch": "armeabi-v7a",
+                    "url": "http://127.0.0.1:{serverPort}/file/VodPlus/EnvFiles/simple_torrent_armv7.7z",
+                    "size": "12 MB",
+                    "pan": {
+                        "match": "simple_torrent_armv7.7z"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "curl",
+            "group": "network",
+            "version": "8.10.0",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_curl.jpg?v=20260723c",
+            "auto_install": false,
+            "available": true,
+            "show": true,
+            "info": "命令行网络工具（HTTP/HTTPS/FTP 等）。\n说明：本包是 musl 版 curl，在 Android 上不能直接读系统 DNS/证书；环境市场执行时会自动用 App 解析域名并挂系统 CA。\n测本机服务请填 http://127.0.0.1:端口/",
+            "binary_path": "bin/curl",
+            "commands": [
+                {
+                    "id": "self_test",
+                    "name": "✅ 自检（能否调用）",
+                    "description": "检测 curl 能否执行：版本 + 本机文件读取 + HTTPS 外网（自动 DNS/CA）。任一步失败会显示错误原因。",
+                    "command": "echo \"==== curl 自检 ====\"; echo \"which: $(command -v curl 2>/dev/null || echo 未找到)\"; echo \"---- 版本 ----\"; curl -V 2>&1 | head -n 3; echo \"---- 读本地文件 ----\"; curl -sS --connect-timeout 5 file:///proc/version 2>&1 | head -n 1; EC1=$?; echo \"file_exit=$EC1\"; echo \"---- HTTPS 外网 ----\"; curl -L -sS --connect-timeout 15 --max-time 30 -o /dev/null -w \"http_code=%{http_code}\\n\" https://www.baidu.com; EC2=$?; echo \"https_exit=$EC2\"; echo \"---- 结果 ----\"; if [ \"$EC1\" = \"0\" ] && [ \"$EC2\" = \"0\" ]; then echo \"✅ curl 可正常调用（本地+HTTPS 均通过）\"; elif [ \"$EC1\" = \"0\" ]; then echo \"⚠️ 二进制可用，但 HTTPS 失败（看上方错误；本机 http://127.0.0.1 仍可测）\"; else echo \"❌ curl 调用失败，请重装 curl 包\"; fi",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "version",
+                    "name": "查看版本",
+                    "description": "显示 curl 版本及支持的协议信息",
+                    "command": "curl -V",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "get_request",
+                    "name": "发起GET请求",
+                    "description": "发起简单的 GET 请求并输出结果（-sS：安静但失败会显示错误）",
+                    "command": "curl -L -sS --connect-timeout 20 --max-time 60 {url}",
+                    "auto_execute": false,
+                    "show_output": true,
+                    "variables": [
+                        {
+                            "key": "url",
+                            "name": "请求地址",
+                            "type": "text",
+                            "default": "https://www.baidu.com",
+                            "hint": "输入要请求的URL（本机服务可用 http://127.0.0.1:端口/）",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "id": "download_file",
+                    "name": "下载文件",
+                    "description": "使用 curl 下载文件到指定目录",
+                    "command": "curl -L -sS --connect-timeout 20 --max-time 0 -o \"{save_dir}/{filename}\" \"{url}\" && echo \"已保存: {save_dir}/{filename}\"",
+                    "auto_execute": false,
+                    "show_output": true,
+                    "variables": [
+                        {
+                            "key": "url",
+                            "name": "文件链接",
+                            "type": "text",
+                            "default": "",
+                            "hint": "输入文件的下载链接",
+                            "required": true
+                        },
+                        {
+                            "key": "save_dir",
+                            "name": "保存目录",
+                            "type": "directory",
+                            "default": "/storage/emulated/0/Download",
+                            "hint": "选择保存文件的目录",
+                            "required": true
+                        },
+                        {
+                            "key": "filename",
+                            "name": "保存文件名",
+                            "type": "text",
+                            "default": "download_file.zip",
+                            "hint": "输入保存的文件名",
+                            "required": true
+                        }
+                    ]
+                }
+            ],
+            "downloads": [
+                {
+                    "arch": "arm64-v8a",
+                    "url": "http://127.0.0.1:{serverPort}/file/VodPlus/EnvFiles/curl_arm64.7z",
+                    "size": "1.24 MB",
+                    "pan": {
+                        "match": "curl_arm64.7z"
+                    }
+                },
+                {
+                    "arch": "armeabi-v7a",
+                    "url": "http://127.0.0.1:{serverPort}/file/VodPlus/EnvFiles/curl_armv7a.7z",
+                    "size": "1.24 MB",
+                    "pan": {
+                        "match": "curl_armv7a.7z"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "tgfilebot",
+            "group": "tools",
+            "version": "0.29.0",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_tgfilebot.jpg?v=20260723c",
+            "auto_install": false,
+            "available": false,
+            "show": false,
+            "info": "Telegram 文件直链生成 Bot，可将 TG 媒体文件转为 HTTP 直链，支持流式播放。\n（暂未上架：需先把压缩包上传到夸克总分享后再改 lab.json 打开）",
+            "binary_path": "bin/tgfilebot",
+            "commands": [
+                {
+                    "id": "tgfilebot_start",
+                    "name": "🚀 启动 TGFileBot",
+                    "description": "启动 Telegram 文件直链服务，可自定义端口和配置目录",
+                    "command": "bin/tgfilebot -files {files_dir}",
+                    "auto_execute": false,
+                    "background": true,
+                    "show_output": true,
+                    "work_dir": "{envPath}",
+                    "variables": [
+                        {
+                            "key": "files_dir",
+                            "name": "配置目录",
+                            "type": "directory",
+                            "default": "/storage/emulated/0/VodPlus/files/tgfilebot",
+                            "hint": "存放 config.json 和 session 文件的目录",
+                            "required": true
+                        }
+                    ],
+                    "clicks": [
+                        {
+                            "title": "🌐 打开服务地址",
+                            "action": "webview",
+                            "style": "dialog",
+                            "value": "http://127.0.0.1:8080"
+                        },
+                        {
+                            "title": "📱 生成二维码",
+                            "action": "qrcode",
+                            "value": "http://127.0.0.1:8080"
+                        },
+                        {
+                            "title": "⚙️ 配置说明",
+                            "action": "alert",
+                            "value": "配置文件位置：{files_dir}/config.json\n\n配置示例：\n{\n  \"port\": 8080,\n  \"id\": 你的API_ID,\n  \"hash\": \"你的API_HASH\",\n  \"site\": \"http://你的IP:8080\",\n  \"phone\": \"+8613800138000\",\n  \"botToken\": \"你的Bot_Token\",\n  \"userID\": 你的TG用户ID,\n  \"adminIDs\": [你的TG用户ID]\n}\n\n端口可在 config.json 中修改"
+                        }
+                    ]
+                },
+                {
+                    "id": "tgfilebot_stop",
+                    "name": "🛑 停止 TGFileBot",
+                    "description": "停止所有 tgfilebot 进程",
+                    "command": "pkill -f tgfilebot && echo '✅ TGFileBot 已停止' || echo '❌ 没有运行中的进程'",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "tgfilebot_status",
+                    "name": "🔍 查看 TGFileBot 状态",
+                    "description": "查看 tgfilebot 进程运行状态",
+                    "command": "pgrep -l -f tgfilebot || echo '❌ TGFileBot 未运行'",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "tgfilebot_logs",
+                    "name": "📋 查看运行日志",
+                    "description": "查看 TGFileBot 日志输出",
+                    "command": "tail -n 50 {files_dir}/logs/*.log 2>/dev/null || echo '暂无日志文件'",
+                    "auto_execute": false,
+                    "show_output": true,
+                    "variables": [
+                        {
+                            "key": "files_dir",
+                            "name": "配置目录",
+                            "type": "directory",
+                            "default": "/storage/emulated/0/VodPlus/files/tgfilebot",
+                            "required": true
+                        }
+                    ]
+                },
+                {
+                    "id": "tgfilebot_test",
+                    "name": "🧪 测试接口",
+                    "description": "测试 TGFileBot 服务是否正常",
+                    "command": "curl -s http://127.0.0.1:{port}/health || echo '❌ 服务未响应'",
+                    "auto_execute": false,
+                    "show_output": true,
+                    "variables": [
+                        {
+                            "key": "port",
+                            "name": "端口号",
+                            "type": "number",
+                            "default": "8080",
+                            "hint": "TGFileBot 监听端口（默认 8080）",
+                            "required": true,
+                            "min": 1024,
+                            "max": 65535
+                        }
+                    ],
+                    "clicks": [
+                        {
+                            "title": "🌐 打开接口",
+                            "action": "webview",
+                            "style": "dialog",
+                            "value": "http://127.0.0.1:{port}"
+                        }
+                    ]
+                }
+            ],
+            "downloads": [
+                {
+                    "arch": "arm64-v8a",
+                    "size": "～800 MB",
+                    "url": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/tgfilebot_arm64-v8a.lab.7z",
+                    "pan": {
+                        "match": "tgfilebot_arm64-v8a.lab.7z"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "t4-export",
+            "group": "tools",
+            "version": "1.3.0",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_t4-export.jpg?v=20260723c",
+            "auto_install": false,
+            "available": true,
+            "show": true,
+            "builtin_jar": true,
+            "info": "把线路 JSON 变成 Type4，给局域网其他设备订阅。\n打开面板：填在线地址或选本地 json，点启动即可。\n【弹幕】面板内可看弹幕状态、开「播放时挂弹幕」、点「启动弹幕」。\n需先装环境市场 danmu-api；播放映射线路时自动注入弹幕（局域网可看）。\n站点无 jar 用总 spider，有 jar 用该站自己的。",
+            "mkdir": [
+                "data",
+                "data/logs"
+            ],
+            "commands": [
+                {
+                    "id": "t4_source",
+                    "name": "打开面板（选配置并启动）",
+                    "description": "填在线/选本地 JSON，点启动",
+                    "command": "echo ok",
+                    "auto_execute": false,
+                    "show_output": false,
+                    "clicks": []
+                },
+                {
+                    "id": "t4_stop",
+                    "name": "停止服务",
+                    "description": "停止 Type4 导出",
+                    "command": "RESP=$(curl -sS --connect-timeout 5 \"http://127.0.0.1:9978/proxy?do=t4&action=stop\" 2>/dev/null); echo \"$RESP\" >/dev/null; echo \"✅ 已停止\"",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "t4_status",
+                    "name": "查看状态",
+                    "description": "是否在跑、站点数",
+                    "command": "mkdir -p \"{dataPath}/logs\"; RESP=$(curl -sS --connect-timeout 5 \"http://127.0.0.1:9978/proxy?do=t4&action=status\" 2>/dev/null); echo \"$RESP\" > \"{dataPath}/logs/status.json\"; PORT=10998; if [ -f \"{dataPath}/logs/t4.port\" ]; then PORT=$(cat \"{dataPath}/logs/t4.port\" | tr -d ' \\n\\r'); fi; [ -z \"$PORT\" ] && PORT=10998; IP=\"{lanIp}\"; [ -z \"$IP\" ] && IP=127.0.0.1; printf 'http://%s:%s\\n' \"$IP\" \"$PORT\" > \"{dataPath}/logs/config.url\"; printf 'http://127.0.0.1:%s/\\n' \"$PORT\" > \"{dataPath}/logs/local_home.txt\"; RUNNING=$(echo \"$RESP\" | grep -q '\"running\":true' && echo 是 || echo 否); SITES=$(echo \"$RESP\" | sed -n 's/.*\"sites\":\\([0-9]*\\).*/\\1/p'); SOURCE=$(echo \"$RESP\" | sed -n 's/.*\"source\":\"\\([^\"]*\\)\".*/\\1/p'); echo \"运行中: $RUNNING\"; echo \"可导出站点: ${SITES:-?}\"; echo \"线路源: ${SOURCE:-?}\"; echo \"配置: $(cat \"{dataPath}/logs/config.url\")\"",
+                    "auto_execute": false,
+                    "show_output": true,
+                    "clicks": [
+                        {
+                            "title": "复制配置链接",
+                            "action": "copy_file",
+                            "value": "{dataPath}/logs/config.url"
+                        },
+                        {
+                            "title": "打开面板",
+                            "action": "t4_source_ui",
+                            "value": ""
+                        }
+                    ]
+                }
+            ],
+            "downloads": []
+        },
+        {
+            "name": "pandora",
+            "title": "潘多拉",
+            "group": "network",
+            "version": "1.0.0",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_timeout.jpg?v=20260725p",
+            "auto_install": false,
+            "available": true,
+            "show": false,
+            "info": "潘多拉运行时（由「设置 → 潘多拉」统一安装与管理）。\n本机混合代理 10172；管理 API 19090。\n环境包走外链直下（失败才回退网盘匹配 pandora_arm64.zip）。",
+            "binary_path": "bin/sing-box",
+            "mkdir": [
+                "data",
+                "data/logs",
+                "data/cache",
+                "data/work"
+            ],
+            "commands": [
+                {
+                    "id": "pandora_start",
+                    "name": "启动引擎",
+                    "description": "按已保存订阅转换并启动（建议用设置面板）",
+                    "command": "echo \"请到 设置→潘多拉 填写订阅并点「应用订阅并启动」\"; exit 0",
+                    "auto_execute": false,
+                    "background": false,
+                    "show_output": true
+                },
+                {
+                    "id": "pandora_status",
+                    "name": "查看状态",
+                    "description": "端口 / pid / 最近日志",
+                    "command": "echo \"==== 潘多拉状态 ====\"; PIDF=\"{dataPath}/logs/pandora.pid\"; PORTF=\"{dataPath}/logs/pandora.port\"; if [ -f \"$PIDF\" ] && kill -0 \"$(cat \"$PIDF\")\" 2>/dev/null; then echo \"进程: 运行中 pid=$(cat \"$PIDF\")\"; else echo \"进程: 未运行（或由守护脚本拉起）\"; fi; if [ -f \"$PORTF\" ]; then echo \"端口文件: $(cat \"$PORTF\")\"; else echo \"默认混合口: 10172\"; fi; echo; echo \"---- 探测 10172 ----\"; if command -v curl >/dev/null 2>&1; then curl -s -o /dev/null -w \"http_code=%{http_code}\\n\" --connect-timeout 2 -x http://127.0.0.1:10172 http://www.gstatic.com/generate_204 2>/dev/null || echo \"探测失败\"; else echo \"无 curl\"; fi; echo; echo \"---- boot.log 末尾 ----\"; tail -n 40 \"{dataPath}/logs/boot.log\" 2>/dev/null || echo \"(尚无日志)\"",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "pandora_log",
+                    "name": "查看启动日志",
+                    "description": "data/logs/boot.log",
+                    "command": "echo \"==== boot.log ====\"; tail -n 160 \"{dataPath}/logs/boot.log\" 2>/dev/null || echo \"(尚无日志)\"; echo; ls -la \"{envRootPath}/bin/sing-box\" \"{envRootPath}/bin/clash2singbox\" \"{envRootPath}/singbox.json\" 2>/dev/null",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "pandora_stop",
+                    "name": "停止引擎",
+                    "description": "结束 sing-box",
+                    "command": "PIDF=\"{dataPath}/logs/pandora.pid\"; SHPID=\"{dataPath}/logs/runsingbox.sh.pid\"; if [ -f \"$SHPID\" ]; then kill \"$(cat \"$SHPID\")\" 2>/dev/null; kill -9 \"$(cat \"$SHPID\")\" 2>/dev/null; rm -f \"$SHPID\"; fi; if [ -f \"$PIDF\" ]; then kill \"$(cat \"$PIDF\")\" 2>/dev/null; kill -9 \"$(cat \"$PIDF\")\" 2>/dev/null; rm -f \"$PIDF\"; fi; killall -9 sing-box 2>/dev/null; echo stopped",
+                    "auto_execute": false,
+                    "show_output": true
+                }
+            ],
+            "downloads": [
+                {
+                    "arch": "arm64-v8a",
+                    "url": "https://mpimg.cn/down.php/20c261fa1daf4c106ab83e7235cca46d.zip",
+                    "size": "约 14 MB",
+                    "pan": {
+                        "match": "pandora_arm64.zip"
+                    },
+                    "mirrors": {
+                        "本地9978": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/pandora_arm64.zip"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "proot",
+            "group": "runtime",
+            "title": "PROOT",
+            "version": "5.3-jar",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_proot.jpg?v=20260805t",
+            "auto_install": false,
+            "available": true,
+            "show": false,
+            "builtin_jar": true,
+            "info": "Termux 系完整 PRoot 已打进 jar（对齐默影视实验室）：proot + loader + loader32（arm64）+ libtalloc.so.2 + libandroid-shmem.so。\n装 ubuntu 或开终端时自动释放到本机 lab/proot/bin，无需再下网盘包。\n点「自检」可确认已释放齐全。",
+            "binary_path": "bin/proot",
+            "commands": [
+                {
+                    "id": "self_test",
+                    "name": "✅ 自检（完整运行时）",
+                    "description": "从 jar 释放（如需）并检测 proot / loader / .so",
+                    "command": "echo \"==== proot 完整运行时自检（jar 内置） ====\"; PDIR=\"{envRootPath}/bin\"; echo \"dir=$PDIR\"; ls -la \"$PDIR\" 2>&1 | head -n 30; echo \"----\"; for f in proot loader libtalloc.so.2 libandroid-shmem.so; do if [ -f \"$PDIR/$f\" ]; then echo \"OK $f\"; else echo \"MISS $f\"; fi; done; [ -f \"$PDIR/loader32\" ] && echo \"OK loader32\" || echo \"(loader32 可选)\"; echo \"----\"; export PROOT_LOADER=\"$PDIR/loader\"; export PROOT_LOADER_32=\"$PDIR/loader32\"; export LD_LIBRARY_PATH=\"$PDIR:${LD_LIBRARY_PATH}\"; export PROOT_NO_SECCOMP=1; echo \"PROOT_LOADER=$PROOT_LOADER\"; \"$PDIR/proot\" -V 2>&1 | head -n 8; EC=$?; echo \"exit=$EC\"; if [ ! -x \"$PDIR/loader\" ]; then echo \"❌ 缺 loader，请换新版加密 jar\"; elif [ \"$EC\" = \"0\" ] || [ \"$EC\" = \"1\" ]; then echo \"✅ proot 可调用\"; else echo \"❌ proot 调用失败\"; fi",
+                    "auto_execute": false,
+                    "show_output": true
+                }
+            ],
+            "downloads": []
+        },
+        {
+            "name": "ubuntu",
+            "group": "runtime",
+            "title": "Ubuntu",
+            "version": "24.04.4",
+            "icon": "https://jk.catvod.site/jk/assets/binmarket_ubuntu.jpg?v=20260805t",
+            "auto_install": false,
+            "available": true,
+            "show": true,
+            "info": "Ubuntu Base（官方约 29MB rootfs）+ jar 内置 Termux 完整 proot。\n装本包时自动释放 proot（含 loader），App 沙箱直跑，对齐默影视实验室。\n菜单可一键 apt 装 PHP / Python3 / Node.js（共用同一份 rootfs，比默影视分四个包更省空间）。\n无完整发行版需求时可用同组「termux」（不走 proot）。\n「终端」自己输命令；「AI对话」说人话（设置→AI大模型）；「Ubuntu目录」用 MT 打开 rootfs。\n不是完整桌面；装软件后体积会变大。",
+            "binary_path": "bin/ubuntu",
+            "mkdir": [
+                "data",
+                "data/logs"
+            ],
+            "var_path": {
+                "PATH": "bin:../proot/bin",
+                "LD_LIBRARY_PATH": "../proot/bin"
+            },
+            "commands": [
+                {
+                    "id": "ubuntu_terminal",
+                    "name": "💻 终端",
+                    "description": "打开终端：输入命令回车执行",
+                    "command": "true",
+                    "auto_execute": false,
+                    "show_output": false
+                },
+                {
+                    "id": "ubuntu_ai_chat",
+                    "name": "🤖 AI对话",
+                    "description": "用人话让 AI 在 Ubuntu 里执行命令（模型同设置→AI大模型）",
+                    "command": "true",
+                    "auto_execute": false,
+                    "show_output": false
+                },
+                {
+                    "id": "apt_update",
+                    "name": "🔄 更新软件源",
+                    "description": "apt-get update（装软件前建议先跑）",
+                    "command": "true",
+                    "auto_execute": false,
+                    "show_output": false
+                },
+                {
+                    "id": "install_php",
+                    "name": "📦 安装 PHP",
+                    "description": "apt 安装 php-cli / php-curl / php-mbstring / php-xml（需联网）",
+                    "command": "true",
+                    "auto_execute": false,
+                    "show_output": false
+                },
+                {
+                    "id": "install_python3",
+                    "name": "📦 安装 Python3",
+                    "description": "apt 安装 python3 / python3-pip / python3-venv（需联网）",
+                    "command": "true",
+                    "auto_execute": false,
+                    "show_output": false
+                },
+                {
+                    "id": "install_nodejs",
+                    "name": "📦 安装 Node.js",
+                    "description": "apt 安装 nodejs / npm（需联网；Ubuntu 源版本可能偏旧）",
+                    "command": "true",
+                    "auto_execute": false,
+                    "show_output": false
+                },
+                {
+                    "id": "self_test",
+                    "name": "✅ 自检",
+                    "description": "uname + os-release，确认 proot/rootfs 正常（直跑）",
+                    "command": "true",
+                    "auto_execute": false,
+                    "show_output": true
+                },
+                {
+                    "id": "open_ubuntu_dir",
+                    "name": "Ubuntu目录",
+                    "description": "用 MT 打开 Ubuntu rootfs，可浏览/编辑文件",
+                    "command": "true",
+                    "auto_execute": false,
+                    "show_output": false
+                }
+            ],
+            "downloads": [
+                {
+                    "arch": "arm64-v8a",
+                    "url": "https://cdimage.ubuntu.com/ubuntu-base/releases/24.04/release/ubuntu-base-24.04.4-base-arm64.tar.gz",
+                    "size": "28.5 MB",
+                    "mirrors": {
+                        "官方": "https://cdimage.ubuntu.com/ubuntu-base/releases/24.04/release/ubuntu-base-24.04.4-base-arm64.tar.gz",
+                        "本地9978": "http://127.0.0.1:9978/file/VodPlus/EnvFiles/二进制/ubuntu.zip"
+                    },
+                    "pan": {
+                        "match": "ubuntu.zip"
+                    }
+                },
+                {
+                    "arch": "armeabi-v7a",
+                    "url": "https://cdimage.ubuntu.com/ubuntu-base/releases/24.04/release/ubuntu-base-24.04.4-base-armhf.tar.gz",
+                    "size": "26 MB",
+                    "mirrors": {
+                        "官方": "https://cdimage.ubuntu.com/ubuntu-base/releases/24.04/release/ubuntu-base-24.04.4-base-armhf.tar.gz"
+                    }
+                }
+            ]
+        }
+    ],
+    "packages": []
+}

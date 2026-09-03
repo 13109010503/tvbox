@@ -1,5 +1,5 @@
 {
-  "spider": "./spider.jar",
+  "spider": "./jar/fm.jar",
   "wallpaper": "http://饭太硬.top/深色壁纸/api.php",
   "logo": "./img/logo.gif",
   "lives": [
@@ -61,7 +61,7 @@
       "name": "🌕┃豆瓣┃推荐",
       "type": 3,
       "api": "csp_DouDou",
-      "jar": "./lib/fty.jar",
+      "jar": "./jar/fty.jar",
       "searchable": 0,
       "quickSearch": 0,
       "filterable": 0
@@ -71,7 +71,7 @@
       "name": "🍎┃小苹果┃IJK",
       "type": 3,
       "api": "csp_LiteApple",
-      "jar": "./lib/fty.jar",
+      "jar": "./jar/fty.jar",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1
@@ -474,7 +474,7 @@
       "name": "短剧网",
       "type": 3,
       "api": "csp_Duanjuw",
-      "jar": "./lib/xyq.jar",
+      "jar": "./jar/xyq.jar",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
@@ -484,7 +484,7 @@
       "name": "🧡短剧2",
       "type": 3,
       "api": "csp_AppYsV2",
-      "jar": "./lib/dj0.jar",
+      "jar": "./jar/dj0.jar",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1,
@@ -495,7 +495,7 @@
       "name": "🅱哔哔┃合集",
       "type": 3,
       "api": "csp_Bili",
-      "jar": "./lib/guodaxia.jar",
+      "jar": "./jar/guodaxia.jar",
       "style": {
         "type": "rect",
         "ratio": 1.597
@@ -509,7 +509,7 @@
       "key": "Biliych",
       "name": "🅱哔哔┃歌曲",
       "type": 3,
-      "jar": "./lib/guodaxia.jar",
+      "jar": "./jar/guodaxia.jar",
       "api": "csp_Bili",
       "style": {
         "type": "rect",
@@ -529,21 +529,21 @@
       "filterable": 0,
       "changeable": 0,
       "ext": "http://127.0.0.1:9978/file/tvfan/token.txt",
-      "jar": "./lib/alisz.jar"
+      "jar": "./jar/alisz.jar"
     },
     {
       "key": "配置中心",
       "name": "阿里｜配置中心",
       "type": 3,
       "api": "csp_Config",
-      "jar": "./lib/mypg.jar",
+      "jar": "./jar/mypg.jar",
       "searchable": 0,
       "changeable": 0,
       "style": {
         "type": "rect",
         "ratio": 1
       },
-      "ext": "./lib/PG推送.json"
+      "ext": "./ext/PG推送.json"
     },
     {
       "key": "PanSou",
@@ -582,21 +582,24 @@
       "api": "https://www.xiangjiaozyw.com/api.php/provide/vod/at/xml/",
       "searchable": 1,
       "quickSearch": 0
-    },{
+    },
+    {
       "key": "91精品",
       "name": "91精品",
       "type": 1,
       "api": "https://91jpzyw.com/api.php/provide/vod/at/json",
       "searchable": 1,
       "quickSearch": 0
-    },{
+    },
+    {
       "key": "幸资源",
       "name": "幸资源",
       "type": 0,
       "api": "https://xzybb1.com/api.php/provide/vod/at/xml",
       "searchable": 1,
       "quickSearch": 0
-    },{
+    },
+    {
       "key": "杏吧资源",
       "name": "杏吧资源",
       "type": 0,
@@ -989,8 +992,7 @@
       ]
     }
   ],
-  "parses": [
-  ],
+  "parses": [],
   "flags": [
     "youku",
     "qq",
