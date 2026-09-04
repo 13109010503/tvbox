@@ -1,5 +1,7 @@
 #### ★自用接口地址：
-https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/tvboxdx.json
+CNB高速直连：https://cnb.cool/dodgezhang/tvbox/-/git/raw/main/tvboxdx.json
+
+GitHub加速（含18）：https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/tvboxdx.json
 
 #### ★奇奇本地包
 下载公众号：奇奇资源库
