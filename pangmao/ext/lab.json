@@ -1726,20 +1726,20 @@
             "name": "proot",
             "group": "runtime",
             "title": "PROOT",
-            "version": "5.3-jar",
+            "version": "5.3-online",
             "icon": "https://jk.catvod.site/jk/assets/binmarket_proot.jpg?v=20260805t",
             "auto_install": false,
             "available": true,
             "show": false,
             "builtin_jar": true,
-            "info": "Termux 系完整 PRoot 已打进 jar（对齐默影视实验室）：proot + loader + loader32（arm64）+ libtalloc.so.2 + libandroid-shmem.so。\n装 ubuntu 或开终端时自动释放到本机 lab/proot/bin，无需再下网盘包。\n点「自检」可确认已释放齐全。",
+            "info": "Termux 系完整 PRoot 走线上包（对齐 Go pvideo）：首次用时按 ABI 从 jk/lab 下载 zip，解压到 lab/proot/bin。\n含 proot + loader + loader32（arm64）+ libtalloc.so.2 + libandroid-shmem.so。\n装 ubuntu 或开终端时自动准备，无需再下网盘包。\n点「自检」可确认已就绪。",
             "binary_path": "bin/proot",
             "commands": [
                 {
                     "id": "self_test",
                     "name": "✅ 自检（完整运行时）",
-                    "description": "从 jar 释放（如需）并检测 proot / loader / .so",
-                    "command": "echo \"==== proot 完整运行时自检（jar 内置） ====\"; PDIR=\"{envRootPath}/bin\"; echo \"dir=$PDIR\"; ls -la \"$PDIR\" 2>&1 | head -n 30; echo \"----\"; for f in proot loader libtalloc.so.2 libandroid-shmem.so; do if [ -f \"$PDIR/$f\" ]; then echo \"OK $f\"; else echo \"MISS $f\"; fi; done; [ -f \"$PDIR/loader32\" ] && echo \"OK loader32\" || echo \"(loader32 可选)\"; echo \"----\"; export PROOT_LOADER=\"$PDIR/loader\"; export PROOT_LOADER_32=\"$PDIR/loader32\"; export LD_LIBRARY_PATH=\"$PDIR:${LD_LIBRARY_PATH}\"; export PROOT_NO_SECCOMP=1; echo \"PROOT_LOADER=$PROOT_LOADER\"; \"$PDIR/proot\" -V 2>&1 | head -n 8; EC=$?; echo \"exit=$EC\"; if [ ! -x \"$PDIR/loader\" ]; then echo \"❌ 缺 loader，请换新版加密 jar\"; elif [ \"$EC\" = \"0\" ] || [ \"$EC\" = \"1\" ]; then echo \"✅ proot 可调用\"; else echo \"❌ proot 调用失败\"; fi",
+                    "description": "按需下载（如需）并检测 proot / loader / .so",
+                    "command": "echo \"==== proot 完整运行时自检（在线包） ====\"; PDIR=\"{envRootPath}/bin\"; echo \"dir=$PDIR\"; ls -la \"$PDIR\" 2>&1 | head -n 30; echo \"----\"; for f in proot loader libtalloc.so.2 libandroid-shmem.so; do if [ -f \"$PDIR/$f\" ]; then echo \"OK $f\"; else echo \"MISS $f\"; fi; done; [ -f \"$PDIR/loader32\" ] && echo \"OK loader32\" || echo \"(loader32 可选)\"; echo \"----\"; export PROOT_LOADER=\"$PDIR/loader\"; export PROOT_LOADER_32=\"$PDIR/loader32\"; export LD_LIBRARY_PATH=\"$PDIR:${LD_LIBRARY_PATH}\"; export PROOT_NO_SECCOMP=1; echo \"PROOT_LOADER=$PROOT_LOADER\"; \"$PDIR/proot\" -V 2>&1 | head -n 8; EC=$?; echo \"exit=$EC\"; if [ ! -x \"$PDIR/loader\" ]; then echo \"❌ 缺 loader，请检查网络后重试\"; elif [ \"$EC\" = \"0\" ] || [ \"$EC\" = \"1\" ]; then echo \"✅ proot 可调用\"; else echo \"❌ proot 调用失败\"; fi",
                     "auto_execute": false,
                     "show_output": true
                 }

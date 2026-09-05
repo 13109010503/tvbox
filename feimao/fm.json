@@ -1,5 +1,5 @@
 {
-  "spider": "./jar/7abd3-c77d7d3f-c3f1-4edf-91d8-6b57bec20e9c.png;md5;7abd3338bf2a350c94672c258590ccea",
+  "spider": "./jar/6b3f3-d6b2d2c3-70cd-47a6-8632-6096809927d4.png;md5;6b3f30565b0bb99d486b40049bcd4802",
   "wallpaper": "https://深色壁纸.xxooo.cf/",
   "logo": "http://xn--z7x900a.net/fm.gif",
   "sites": [
@@ -97,35 +97,35 @@
       "name": "🐼┃肥猫┃APP",
       "type": 3,
       "api": "csp_AppGet",
-      "ext": "https://cms140.yhg.one|bM7iC9eA3oZ1nB7z"
+      "ext": "https://appcms.4ksj.app|O3K6rYx75Q4xtiIE"
     },
     {
       "key": "干饭",
       "name": "🍚┃干饭┃APP",
       "type": 3,
-      "api": "csp_AppGet",
-      "ext": "https://mk1080.top/get.txt|c60d88b2eep53za8"
+      "api": "csp_AppQi",
+      "ext": "http://110.42.67.130:1226|kj37zs29q22jk96t"
     },
     {
       "key": "光盘",
       "name": "📀┃光盘┃APP",
       "type": 3,
       "api": "csp_AppQi",
-      "ext": "https://yun-1316442804.cos.ap-guangzhou.myqcloud.com/600.txt|FTgP4Gq8zPiqbt7M"
+      "ext": "http://103.217.190.91:5566|hagYExMdMkeWfemK"
     },
     {
       "key": "行动",
       "name": "😌┃行动┃APP",
       "type": 3,
       "api": "csp_AppQi",
-      "ext": "https://qj4.catbb.xyz|eecbio48dsq13kkk"
+      "ext": "https://lanyingjisu.oss-cn-wuhan-lr.aliyuncs.com/lyjszx.txt|oW5UxZ5kWVr1DI69"
     },
     {
       "key": "再来",
       "name": "✌️┃再来┃APP",
       "type": 3,
       "api": "csp_AppGet",
-      "ext": "https://vv.229d.cn|8888888888888888"
+      "ext": "https://www.douy32mf.top|1234567887654321"
     },
     {
       "key": "一碗",
@@ -147,13 +147,6 @@
       "type": 3,
       "api": "csp_AppGet",
       "ext": "https://allinadmin.oss-cn-hangzhou.aliyuncs.com/bk/9.txt|88689667dce61725"
-    },
-    {
-      "key": "永永",
-      "name": "♾️┃永永┃APP",
-      "type": 3,
-      "api": "csp_AppGet",
-      "ext": "https://444421.xyz|#getapp@TMD@2025|120"
     },
     {
       "key": "csp_Jpys",
@@ -200,7 +193,7 @@
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1,
-      "ext": "https://www.czzy89.com"
+      "ext": "https://cz01.vip"
     },
     {
       "key": "csp_SP360",
@@ -243,7 +236,7 @@
       "name": "🍠┃番薯┃动漫",
       "type": 3,
       "api": "csp_AppGet",
-      "ext": "https://new.app.bytegooty.com|N4yj7l7xKxHF4*gz"
+      "ext": "https://app.omofun1.top|66dc309cbeeca454"
     },
     {
       "key": "csp_FirstAid",
