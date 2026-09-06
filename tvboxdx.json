@@ -51,6 +51,10 @@
         {
             "url": "https://gh-proxy.org/https://raw.githubusercontent.com/DodgeZhang/tvbox/refs/heads/main/guodaxia/gdx.json",
             "name": "锅大侠"
+        },
+        {
+            "url": "https://ghfast.top/https://raw.githubusercontent.com/goodcommunication/mydm/main/dm.json",
+            "name": "小白弹幕"
         }
     ]
 }
