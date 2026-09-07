@@ -1,5 +1,5 @@
 {
-  "spider": "./jar/aidaox-20260905-085342.jar;md5;63779d506f66bc6307d1d48ff3995204",
+  "spider": "./jar/aidaox-20260907-162857.jar;md5;a3d2a65ce4d0e6f7aafd6565aefa8d56",
   "wallpaper": "proxy://do=wallpaper",
   "logo": "https://jk.catvod.site/jk/assets/feimao_logo.gif?v=20260901c",
   "sites": [
@@ -125,8 +125,7 @@
       "api": "csp_Gz360",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "changeable": 1
+      "filterable": 1
     },
     {
       "key": "玩偶",
@@ -738,24 +737,6 @@
       "filterable": 1,
       "changeable": 1,
       "ext": "{\"host\":\"https://www.cd-zj.com\",\"publish\":\"https://www.vip1949.com/\"}"
-    },
-    {
-      "key": "怀桑",
-      "name": "🎄怀桑[2K]",
-      "type": 3,
-      "api": "csp_AppQi",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "changeable": 1,
-      "ext": {
-        "site": "https://jk.catvod.site/jk/t4/mqxhqj.txt",
-        "dataKey": "kj37zs29q22jk96t",
-        "dataIv": "kj37zs29q22jk96t",
-        "init": "initV122",
-        "playname": "怀桑",
-        "ua": "okhttp/3.10.0"
-      }
     },
     {
       "key": "剧圈99",
@@ -1823,7 +1804,7 @@
     {
       "name": "直播·网页电视",
       "type": 0,
-      "url": "proxy://do=live&v=ntv",
+      "url": "proxy://do=ntvlive",
       "ua": "okhttp/3.15",
       "timeZone": "Asia/Shanghai"
     }
