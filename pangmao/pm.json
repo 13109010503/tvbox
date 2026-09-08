@@ -1,5 +1,5 @@
 {
-  "spider": "./jar/aidaox-20260907-162857.jar;md5;a3d2a65ce4d0e6f7aafd6565aefa8d56",
+  "spider": "./jar/aidaox-20260908-212636.jar;md5;93fb3c4f829869ed20b47c950f98a3f9",
   "wallpaper": "proxy://do=wallpaper",
   "logo": "https://jk.catvod.site/jk/assets/feimao_logo.gif?v=20260901c",
   "sites": [
@@ -1715,6 +1715,21 @@
       "style": {
         "type": "list",
         "ratio": 1.0
+      },
+      "timeout": 60
+    },
+    {
+      "key": "包子漫画",
+      "name": "🍞包子[漫画]",
+      "type": 3,
+      "api": "csp_BaoZi",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 0,
+      "style": {
+        "type": "rect",
+        "ratio": 0.75
       },
       "timeout": 60
     },
